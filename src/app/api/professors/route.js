@@ -5,10 +5,14 @@ import { authenticateToken } from '@/libs/auth';
 
 export const GET = async (request) => {
   const authResult = authenticateToken(request);
-    
+  
+  if (authResult.status !== 200) {
+    return NextResponse.json({ error: authResult.message }, { status: authResult.status });
+  }
+  
   const { user } = request
 
-  if (user.type != 'professor') {
+  if (user.type != 'student') {
     return NextResponse.json({ error: "wrong route, access denied" }) 
   }
 
@@ -21,6 +25,10 @@ export const GET = async (request) => {
 
 export const PUT = async (request) => {
   const authResult = authenticateToken(request);
+
+  if (authResult.status !== 200) {
+    return NextResponse.json({ error: authResult.message }, { status: authResult.status });
+  }
     
   const { user } = request
 
@@ -42,6 +50,10 @@ export const PUT = async (request) => {
 
 export const DELETE = async (request) => {
   const authResult = authenticateToken(request);
+
+  if (authResult.status !== 200) {
+    return NextResponse.json({ error: authResult.message }, { status: authResult.status });
+  }
     
   const { user } = request
 
