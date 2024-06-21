@@ -12,7 +12,7 @@ export const GET = async (request) => {
   
   const { user } = request
 
-  if (user.type != 'student') {
+  if (user.type != 'professor') {
     return NextResponse.json({ error: "wrong route, access denied" }) 
   }
 
