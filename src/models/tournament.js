@@ -3,17 +3,21 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 // Esquema de la batalla
-const BatallaSchema = new Schema({
-  id: { type: Number, required: true },
+const BattleSchema = new Schema({
+  _id: false,
+  Battleid: { type: Number, required: true,  unique: true },
   alumno1: { type: Object, required: true },
   alumno2: { type: Object, required: true },
-  ganador: { type: Number, required: true }
+  ganador: {
+    id: { type: Number, required: true },
+    nombre: { type: String, required: true }
+  }
 });
 
 // Esquema del torneo
-const TorneoSchema = new Schema({
+const TournamentSchema = new Schema({
   profesorId: { type: Number, required: true },
-  batallas: { type: [BatallaSchema], required: true }
+  batallas: { type: [BattleSchema], required: true }
 });
 
-export default mongoose.models.Torneo || mongoose.model('Torneo', TorneoSchema);
+export default mongoose.models.Tournament || mongoose.model('Tournament', TournamentSchema);
