@@ -12,6 +12,8 @@ export const GET = async (request) => {
 
     const { user } = request
 
+    console.log({user})
+
     const group = await getGroup(user.groupId)
 
     return NextResponse.json(group);

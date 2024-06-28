@@ -15,7 +15,7 @@ export async function POST(req) {
       where: { email },
     });
 
-    const user = professorFound ? {...professorFound, type: "professor"} : (studentFound ? {...studentFound, type:"student"} : null);
+    const user = professorFound ? {...professorFound, type: "professor", groupId: professorFound.id} : (studentFound ? {...studentFound, type:"student"} : null);
 
     if (user && await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ id: user.id, groupId: user.groupId, type: user.type }, process.env.JWT_SECRET, { expiresIn: '24h' });

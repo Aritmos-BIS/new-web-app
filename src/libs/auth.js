@@ -9,6 +9,8 @@ export function authenticateToken(req) {
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
 
+    console.log({user}, "auth")
+
     req.user = user;
 
     return { status: 200, message: 'Token valid' };
