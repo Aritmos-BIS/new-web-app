@@ -22,6 +22,8 @@ model Student {
   email            String   @unique
   additionQuiz     Int?     @default(0)
   substractionQuiz Int?     @default(0)
+  numberWins       Int?     @default(0)
+  urlImage         String?  @default("")
   groupId          Int
   group            Group    @relation(fields: [groupId], references: [id])
   created_at       DateTime @default(now())
