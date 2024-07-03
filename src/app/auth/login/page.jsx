@@ -1,21 +1,18 @@
 'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import { Grid, Box, Avatar, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
-import Image from 'next/image';
+import { apiFetch } from '@/libs/request';
+import Loadview from '@/components/Loadview';
 
 function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const router = useRouter();
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
 
   const imageStyle = {
     borderRadius: '15px',
@@ -25,29 +22,22 @@ function LoginPage() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error('Error al iniciar sesión');
-      }
-
-      const result = await res.json();
-      localStorage.setItem('token', result.token); // Almacenar el token en localStorage
+      setLoading(true)
+      const payload = { email: data.email, password: data.password };
+      const response = await apiFetch({ payload, method: 'POST' }, '/api/login');
+      localStorage.setItem('token', response.token); // Almacenar el token en localStorage
       router.push('/auth/users');
       router.refresh();
+      setLoading(false)
     } catch (error) {
       setError(error.message);
+      setLoading(false)
     }
   };
+
+  if(loading){
+    return <Loadview/>
+  }
 
   return (
     <Grid container sx={{ height: 'min100vh', width: 'auto', justifyContent: 'space-evenly', alignItems: 'center', m: 4 }}>
@@ -150,3 +140,4 @@ function LoginPage() {
 }
 
 export default LoginPage;
+  

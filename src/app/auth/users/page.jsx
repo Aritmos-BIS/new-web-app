@@ -2,36 +2,42 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { jwtDecode } from 'jwt-decode';
 import { Container, Typography, Box, Paper, Button, Grid } from '@mui/material';
 import Link from 'next/link';
+import { apiFetch } from '@/libs/request';
+import { useStore } from '@/libs/store'
+import Loadview from '@/components/Loadview';
 
 const Page = () => {
-  const [userType, setUserType] = useState(null);
-  const [userId, setUserId] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { doFetchUser, user  } = useStore(state => state)
+
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const decodedToken = jwtDecode(token);
-        setUserId(decodedToken.id);
-        setUserType(decodedToken.type);
-      }
-      setLoading(false);
-    };
+    handleLoad();
+  },[]);
 
-    fetchData();
-  }, [router]);
+  useEffect(() => {
+    console.log({user})
+  }, [user])
+
+  const handleLoad = async () => {
+    setLoading(true);
+    await doFetchUser()
+    setLoading(false);
+  };
+ 
+  if (loading) {
+    return <Loadview/>;
+  }
+
 
   const renderTeacherView = () => (
     <Container maxWidth="lg">
       <Box textAlign="center" my={4}>
         <Typography variant="h2" color="primary" gutterBottom>
-          Bienvenido, {userId}!
+          Bienvenido, {user.name}!
         </Typography>
         <Typography variant="h4" color="textSecondary">
           Nos alegra tenerte de vuelta
@@ -64,7 +70,7 @@ const Page = () => {
     <Container maxWidth="lg">
       <Box textAlign="center" my={4}>
         <Typography variant="h3" color="#E0AAFF" gutterBottom>
-          Bienvenido, {userId}!
+          Bienvenido, {user.name}!
         </Typography>
         <Typography variant="h5" color="white">
           Nos alegra tenerte de vuelta
@@ -111,14 +117,11 @@ const Page = () => {
     </Container>
   );
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+  
   return (
     <Box sx={{ m: 4, height: '100%' }}>
-      {userType === 'professor' && renderTeacherView()}
-      {userType === 'student' && renderStudentView()}
+      {user.userType === 'professor' && renderTeacherView()}
+      {user.userType === 'student' && renderStudentView()}
     </Box>
   );
 };

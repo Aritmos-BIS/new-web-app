@@ -18,7 +18,7 @@ export const GET = async (request) => {
 
     const student = await getProfiles(user.id, 'student')
 
-    return NextResponse.json(student)
+    return NextResponse.json({...student, userType: user.type})
 }
 
 export const PUT = async (request) => {

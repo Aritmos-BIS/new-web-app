@@ -18,7 +18,7 @@ export const GET = async (request) => {
 
   const professor =  await getProfiles(user.id, 'professor')
 
-  return NextResponse.json(professor)
+  return NextResponse.json({...professor, userType: user.type})
 }
 
 
