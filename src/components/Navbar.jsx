@@ -19,7 +19,7 @@ async function Navbar() {
               <>
                 <li style={{ marginRight: '10px' }}>
                   <Link href="/">
-                    <Button style={{color: '#E0AAFF'}}>Inicio</Button>
+                    <Button style={{color: '#E0AAFF'}}>Landing Page</Button>
                   </Link>
                 </li>
                 <li style={{ marginRight: '10px' }}>
@@ -37,7 +37,19 @@ async function Navbar() {
               <>
                 <li style={{ marginRight: '10px' }}>
                   <Link href="/auth/users">
-                    <Button style={{color: '#E0AAFF'}}>Inicio</Button>
+                    <Button style={{color: '#E0AAFF'}}>Inicio de usuario</Button>
+                  </Link>
+                </li>
+
+                <li style={{ marginRight: '10px' }}>
+                  <Link href="/auth/users/professors">
+                    <Button style={{color: '#E0AAFF'}}>perfil de usuario profesor</Button>
+                  </Link>
+                </li>
+
+                <li style={{ marginRight: '10px' }}>
+                  <Link href="/auth/users/students/profile">
+                    <Button style={{color: '#E0AAFF'}}>perfil de usuario estudiante</Button>
                   </Link>
                 </li>
                

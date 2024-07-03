@@ -198,9 +198,6 @@ const SubtractionGame = () => {
             </Box>
           )}
         </Container>
-        <Button variant="contained" color="primary" href="/auth/users/students/quizes/addition">
-          Examen
-        </Button>
       </Box>
     </main>
   );

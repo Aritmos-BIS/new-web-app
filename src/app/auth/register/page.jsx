@@ -9,11 +9,18 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import Image from "next/image";
 
 function RegisterPage() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const router = useRouter();
   const isProfessor = watch("isprofessor");
+
+  const imageStyle = {
+    borderRadius: '15px',
+    border: '0',
+    boxShadow: '5px 5px 5px 5px #000000'
+  }
 
   const onSubmit = handleSubmit(async (data) => {
     if (data.password !== data.confirmPassword) {
@@ -49,16 +56,14 @@ function RegisterPage() {
 
   return (
     <Grid container sx={{ height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-      <Grid item sx={{ backgroundColor: '#7B2CBF', height: 'auto', width: '700px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4, m: 4 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h3" sx={{ color: 'white' }}>Registro</Typography>
-          <Typography>¿Aún no tienes cuenta?</Typography>
-          <Link href="/auth/register">
-            <Typography sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Regístrate ahora</Typography>
-          </Link>
-          <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 1, width: '100%' }}>
+      <Grid item sx={{ backgroundColor: '#7B2CBF', height: 'auto', width: '600px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4, m: 4 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+          textAlign: 'center'
+         }}>
+          <Box component="form" noValidate onSubmit={onSubmit} sx={{ width: '100%' }}>
+          <Typography variant="h4" sx={{ color: 'white' }}>Registro</Typography>
             <TextField
-              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}
+              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3}}
               variant="filled"
               color="secondary"
               margin="normal"
@@ -75,7 +80,7 @@ function RegisterPage() {
               {errors.name ? errors.name.message : ' '}
             </Typography>
             <TextField
-              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}
+              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
               variant="filled"
               color="secondary"
               margin="normal"
@@ -91,7 +96,7 @@ function RegisterPage() {
               {errors.lastname ? errors.lastname.message : ' '}
             </Typography>
             <TextField
-              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}
+              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
               variant="filled"
               color="secondary"
               margin="normal"
@@ -107,7 +112,7 @@ function RegisterPage() {
               {errors.email ? errors.email.message : ' '}
             </Typography>
             <TextField
-              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}
+              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
               variant="filled"
               color="secondary"
               margin="normal"
@@ -124,7 +129,7 @@ function RegisterPage() {
               {errors.password ? errors.password.message : ' '}
             </Typography>
             <TextField
-              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}
+              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
               variant="filled"
               color="secondary"
               margin="normal"
@@ -141,7 +146,7 @@ function RegisterPage() {
               {errors.confirmPassword ? errors.confirmPassword.message : ' '}
             </Typography>
             <TextField
-              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}
+              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
               variant="filled"
               color="secondary"
               margin="normal"
@@ -162,17 +167,20 @@ function RegisterPage() {
             />
             <Button
               type="submit"
-              fullWidth
-              sx={{ backgroundColor: '#C77DFF', color: 'white', mt: 1 }}
+              
+              sx={{ backgroundColor: '#C77DFF', color: 'white', mt: 1, mx: 'auto' }}
             >
               Ingresar
             </Button>
           </Box>
         </Box>
       </Grid>
-      <Grid item sx={{ backgroundImage: "url('/images/ajoloteMimido.png')", width: "700px", height: "700px", backgroundRepeat: 'no-repeat', backgroundPosition: 'center', borderRadius: '15px', boxShadow: 'inset 5px 5px 5px 5px #000000', border: '0', display: { xs: 'none', md: 'block' } }}>
-      </Grid>
-    </Grid>
+      <Image
+        src= "/images/ajoloteMimido.png"
+        width={550}
+        height={550} 
+        style={imageStyle}
+        />    </Grid>
   );
 }
 

@@ -7,16 +7,21 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import Image from 'next/image';
 
 function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const router = useRouter();
   const [error, setError] = useState(null);
+
+  const imageStyle = {
+    borderRadius: '15px',
+    border: '0',
+    boxShadow: '5px 5px 5px 5px #000000'
+  }
 
   const onSubmit = async (data) => {
     try {
@@ -45,13 +50,15 @@ function LoginPage() {
   };
 
   return (
-    <Grid container sx={{ height: '100vh', width: '100%', justifyContent: 'space-evenly', alignContent: 'center', m: 4 }}>
-      <Grid sx={{ backgroundColor: '#7B2CBF', height: '550px', width: '550px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4, m: 4 }}>
+    <Grid container sx={{ height: 'min100vh', width: 'auto', justifyContent: 'space-evenly', alignItems: 'center', m: 4 }}>
+      <Grid sx={{ backgroundColor: '#7B2CBF', height: '500px', width: '500px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4 }}>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center'
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'blueviolet' }}></Avatar>
@@ -61,10 +68,10 @@ function LoginPage() {
           <Grid sx={{ flex: '1', flexDirection: 'column' }}>
             <Typography>¿Aún no tienes cuenta?</Typography>
             <Link href="/auth/register">
-              <Typography sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Regístrate ahora</Typography>
+              <Typography sx={{ textDecoration: 'underline', cursor: 'pointer', color: '#E0AAFF' }}>Regístrate ahora</Typography>
             </Link>
           </Grid>
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} fullWidth>
+          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ width: '100%' }}>
               <TextField
                 sx={{
@@ -78,7 +85,7 @@ function LoginPage() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Correo Electronico"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -94,7 +101,7 @@ function LoginPage() {
                 {errors.email ? errors.email.message : ' '}
               </Typography>
             </Box>
-            <Box sx={{ width: '400px' }} fullWidth>
+            <Box sx={{ width: '400px' }} >
               <TextField
                 sx={{
                   boxShadow: 'inset 5px 5px 5px 5px #E0E0E0',
@@ -107,7 +114,7 @@ function LoginPage() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Contrasena"
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -122,13 +129,8 @@ function LoginPage() {
                 {errors.password ? errors.password.message : ' '}
               </Typography>
             </Box>
-            <FormControlLabel
-              control={<Checkbox value="isProfessor" color="primary" />}
-              label="Marca esta casilla si eres un profesor"
-            />
             <Button
               type="submit"
-              fullWidth
               sx={{ backgroundColor: '#C77DFF', color: 'white' }}
             >
               Ingresar
@@ -137,17 +139,12 @@ function LoginPage() {
           </Box>
         </Box>
       </Grid>
-      <Grid sx={{
-        backgroundImage: "url('/images/ajoloteMimido.png')",
-        width: "700px",
-        height: "700px",
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        borderRadius: '15px',
-        boxShadow: 'inset 5px 5px 5px 5px #000000',
-        border: '0'
-      }}>
-      </Grid>
+        <Image
+        src= "/images/ajoloteMimido.png"
+        width={550}
+        height={550} 
+        style={imageStyle}
+        />
     </Grid>
   );
 }
