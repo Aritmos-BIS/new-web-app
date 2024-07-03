@@ -1,4 +1,4 @@
-export const apiFetch = async ({ payload = '', method }, url) => {
+export const apiFetch = async ({ payload, method }, url) => {
   const URL = url;
   const token = localStorage.getItem('token');
 

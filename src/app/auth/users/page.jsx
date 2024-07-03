@@ -2,30 +2,29 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { jwtDecode } from 'jwt-decode';
 import { Container, Typography, Box, Paper, Button, Grid } from '@mui/material';
 import Link from 'next/link';
 import { apiFetch } from '@/libs/request';
+import { useStore } from '@/libs/store'
 import Loadview from '@/components/Loadview';
 
 const Page = () => {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const token = localStorage.getItem('token');
-  const decodedToken = jwtDecode(token);
+  const { doFetchUser, user  } = useStore(state => state)
 
 
   useEffect(() => {
     handleLoad();
   },[]);
 
+  useEffect(() => {
+    console.log({user})
+  }, [user])
+
   const handleLoad = async () => {
     setLoading(true);
-
-    const _data = await apiFetch({ method: 'GET' }, `/api/${decodedToken.type}s`)
-    setData({ ..._data })
-
+    await doFetchUser()
     setLoading(false);
   };
  
@@ -38,7 +37,7 @@ const Page = () => {
     <Container maxWidth="lg">
       <Box textAlign="center" my={4}>
         <Typography variant="h2" color="primary" gutterBottom>
-          Bienvenido, {data.name}!
+          Bienvenido, {user.name}!
         </Typography>
         <Typography variant="h4" color="textSecondary">
           Nos alegra tenerte de vuelta
@@ -71,7 +70,7 @@ const Page = () => {
     <Container maxWidth="lg">
       <Box textAlign="center" my={4}>
         <Typography variant="h3" color="#E0AAFF" gutterBottom>
-          Bienvenido, {data.name}!
+          Bienvenido, {user.name}!
         </Typography>
         <Typography variant="h5" color="white">
           Nos alegra tenerte de vuelta
@@ -121,8 +120,8 @@ const Page = () => {
   
   return (
     <Box sx={{ m: 4, height: '100%' }}>
-      {data.userType === 'professor' && renderTeacherView()}
-      {data.userType === 'student' && renderStudentView()}
+      {user.userType === 'professor' && renderTeacherView()}
+      {user.userType === 'student' && renderStudentView()}
     </Box>
   );
 };
