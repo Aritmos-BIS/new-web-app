@@ -1,51 +1,40 @@
 'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import { Grid, Box, Avatar, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
+import { apiFetch } from '@/libs/request';
+import Loadview from '@/components/Loadview';
 
 function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const router = useRouter();
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
 
   const onSubmit = async (data) => {
     try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error('Error al iniciar sesión');
-      }
-
-      const result = await res.json();
-      localStorage.setItem('token', result.token); // Almacenar el token en localStorage
+      setLoading(true)
+      const payload = { email: data.email, password: data.password };
+      const response = await apiFetch({ payload, method: 'POST' }, '/api/login');
+      localStorage.setItem('token', response.token); // Almacenar el token en localStorage
       router.push('/auth/users');
       router.refresh();
+      setLoading(false)
     } catch (error) {
       setError(error.message);
+      setLoading(false)
     }
   };
 
+  if(loading){
+    return <Loadview/>
+  }
+
   return (
-    <Grid container sx={{ height: '100vh', width: '100%', justifyContent: 'space-evenly', alignContent: 'center', m: 4 }}>
+    <Grid container sx={{ height: '100vh', width: '100vw', justifyContent: 'space-evenly', alignContent: 'center', m: 4 }}>
       <Grid sx={{ backgroundColor: '#7B2CBF', height: '550px', width: '550px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4, m: 4 }}>
         <Box
           sx={{
@@ -64,7 +53,7 @@ function LoginPage() {
               <Typography sx={{ textDecoration: 'underline', cursor: 'pointer' }}>Regístrate ahora</Typography>
             </Link>
           </Grid>
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} fullWidth>
+          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ width: '100%' }}>
               <TextField
                 sx={{
@@ -94,7 +83,7 @@ function LoginPage() {
                 {errors.email ? errors.email.message : ' '}
               </Typography>
             </Box>
-            <Box sx={{ width: '400px' }} fullWidth>
+            <Box sx={{ width: '400px' }}>
               <TextField
                 sx={{
                   boxShadow: 'inset 5px 5px 5px 5px #E0E0E0',
@@ -153,3 +142,4 @@ function LoginPage() {
 }
 
 export default LoginPage;
+  

@@ -5,33 +5,40 @@ import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import { Container, Typography, Box, Paper, Button, Grid } from '@mui/material';
 import Link from 'next/link';
+import { apiFetch } from '@/libs/request';
+import Loadview from '@/components/Loadview';
 
 const Page = () => {
-  const [userType, setUserType] = useState(null);
-  const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
   const router = useRouter();
+  const token = localStorage.getItem('token');
+  const decodedToken = jwtDecode(token);
+
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const decodedToken = jwtDecode(token);
-        setUserId(decodedToken.id);
-        setUserType(decodedToken.type);
-      }
-      setLoading(false);
-    };
+    handleLoad();
+  },[]);
 
-    fetchData();
-  }, [router]);
+  const handleLoad = async () => {
+    setLoading(true);
+
+    const _data = await apiFetch({ method: 'GET' }, `/api/${decodedToken.type}s`)
+    setData({ ..._data })
+
+    setLoading(false);
+  };
+ 
+  if (loading) {
+    return <Loadview/>;
+  }
+
 
   const renderTeacherView = () => (
     <Container maxWidth="lg">
       <Box textAlign="center" my={4}>
         <Typography variant="h2" color="primary" gutterBottom>
-          Bienvenido, {userId}!
+          Bienvenido, {data.name}!
         </Typography>
         <Typography variant="h4" color="textSecondary">
           Nos alegra tenerte de vuelta
@@ -48,7 +55,7 @@ const Page = () => {
               <Typography variant="body1" sx={{ bgcolor: '#5A189A', color: 'white', p: 2, borderRadius: 2, textAlign: 'center', boxShadow: 'inset 1px 1px 5px 5px #c2c2c2' }}>
                 Recuerda que deberás brindarle a tus alumnos el código de tu grupo para que estos puedan unirse, en caso de que desconozcas cuál es este código ingresa a tu perfil para conocerlo.
               </Typography>
-              <Link href={`/auth/users/professors/dashboard/${userId}`}>
+              <Link href={`/auth/users/professors/dashboard/`}>
                 <Button variant="contained" color="warning" sx={{ mt: 2, width: '60%', display: 'block', margin: '20px auto' }}>
                   Ingresa a tu perfil
                 </Button>
@@ -64,7 +71,7 @@ const Page = () => {
     <Container maxWidth="lg">
       <Box textAlign="center" my={4}>
         <Typography variant="h3" color="#E0AAFF" gutterBottom>
-          Bienvenido, {userId}!
+          Bienvenido, {data.name}!
         </Typography>
         <Typography variant="h5" color="white">
           Nos alegra tenerte de vuelta
@@ -111,14 +118,11 @@ const Page = () => {
     </Container>
   );
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+  
   return (
     <Box sx={{ m: 4, height: '100%' }}>
-      {userType === 'professor' && renderTeacherView()}
-      {userType === 'student' && renderStudentView()}
+      {data.userType === 'professor' && renderTeacherView()}
+      {data.userType === 'student' && renderStudentView()}
     </Box>
   );
 };
