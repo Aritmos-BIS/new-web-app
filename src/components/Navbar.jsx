@@ -42,7 +42,7 @@ async function Navbar() {
                 </li>
 
                 <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/users/professors">
+                  <Link href="/auth/users/professors/profile">
                     <Button style={{color: '#E0AAFF'}}>perfil de usuario profesor</Button>
                   </Link>
                 </li>

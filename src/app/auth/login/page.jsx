@@ -6,6 +6,7 @@ import { Grid, Box, Avatar, Button, Checkbox, FormControlLabel, TextField, Typog
 import Link from 'next/link';
 import { apiFetch } from '@/libs/request';
 import Loadview from '@/components/Loadview';
+import Image from 'next/image';
 
 function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
