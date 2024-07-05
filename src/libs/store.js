@@ -16,10 +16,19 @@ export const useStore = create(
           console.error('Error fetching user:', error);
         }
       },
+      doFetchGroup: async () => {
+        try {
+          const response = await apiFetch({ method: 'GET' }, `/api/group`);
+          console.log({response})
+          set({ group: response }); 
+        } catch (error) {
+          console.error('Error fetching group:', error);
+        }
+      },
     }),
     {
-      name: 'user-store', // Name for local storage key
-      whitelist: ['user'], // State keys to persist
+      name: 'store', // Name for local storage key
+      whitelist: ['user', 'group'], // State keys to persist
     }
   )
 );

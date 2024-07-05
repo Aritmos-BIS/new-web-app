@@ -11,7 +11,7 @@ import Loadview from '@/components/Loadview';
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { doFetchUser, user  } = useStore(state => state)
+  const { doFetchUser, doFetchGroup, user, group  } = useStore(state => state)
 
 
   useEffect(() => {
@@ -19,12 +19,13 @@ const Page = () => {
   },[]);
 
   useEffect(() => {
-    console.log({user})
-  }, [user])
+    console.log({group})
+  }, [group])
 
   const handleLoad = async () => {
     setLoading(true);
     await doFetchUser()
+    await doFetchGroup()
     setLoading(false);
   };
  
