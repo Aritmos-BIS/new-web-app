@@ -4,30 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Container, Typography, Box, Paper, Button, Grid } from '@mui/material';
 import Link from 'next/link';
-import { apiFetch } from '@/libs/request';
 import { useStore } from '@/libs/store'
 import Loadview from '@/components/Loadview';
+
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { doFetchUser, doFetchGroup, user, group  } = useStore(state => state)
-
-
-  useEffect(() => {
-    handleLoad();
-  },[]);
-
-  useEffect(() => {
-    console.log({group})
-  }, [group])
-
-  const handleLoad = async () => {
-    setLoading(true);
-    await doFetchUser()
-    await doFetchGroup()
-    setLoading(false);
-  };
+  const { user } = useStore(state => state)
  
   if (loading) {
     return <Loadview/>;
@@ -120,10 +104,12 @@ const Page = () => {
 
   
   return (
+    
     <Box sx={{ m: 4, height: '100%' }}>
       {user.userType === 'professor' && renderTeacherView()}
       {user.userType === 'student' && renderStudentView()}
     </Box>
+   
   );
 };
 
