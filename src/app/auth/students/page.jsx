@@ -72,9 +72,9 @@ const StudentPage = () => {
 
   const Wrapper = () => (
     <Box sx={{ m: 4, height: '100%' }}>
-      {/* <AuthWrapper> */}
+      <AuthWrapper pageType='student'>
         <StudentPage />
-      {/* </AuthWrapper> */}
+      </AuthWrapper>
     </Box>
   )
 
