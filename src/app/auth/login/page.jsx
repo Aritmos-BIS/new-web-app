@@ -1,19 +1,28 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Grid, Box, Avatar, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import { apiFetch } from '@/libs/request';
-import Loadview from '@/components/Loadview';
+import Loadview from '@/components/Loadview'
 import Image from 'next/image';
+import { useStore } from '@/libs/store'
+
 
 function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const router = useRouter();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { doFetchUser, doFetchGroup } = useStore(state => state)
 
+  const handleLoadInfo = async () => {
+    setLoading(true);
+    await doFetchUser()
+    await doFetchGroup()
+    setLoading(false);
+  };
 
   const imageStyle = {
     borderRadius: '15px',
@@ -27,6 +36,7 @@ function LoginPage() {
       const payload = { email: data.email, password: data.password };
       const response = await apiFetch({ payload, method: 'POST' }, '/api/login');
       localStorage.setItem('token', response.token); // Almacenar el token en localStorage
+      await handleLoadInfo();
       router.push('/auth/users');
       router.refresh();
       setLoading(false)
