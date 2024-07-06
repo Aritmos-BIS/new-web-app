@@ -2,64 +2,64 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { Grid, Box, Avatar, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
+import { Grid, Box, Avatar, Button, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import { apiFetch } from '@/libs/request';
-import Loadview from '@/components/Loadview'
+import Loadview from '@/components/Loadview';
 import Image from 'next/image';
-import { useStore } from '@/libs/store'
-
+import { useStore } from '@/libs/store';
 
 function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const router = useRouter();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { doFetchUser, doFetchGroup } = useStore(state => state)
+  const [fetched, setFetched] = useState(false)
+  const { doFetchUser, doFetchGroup, user } = useStore(state => state);
 
   const handleLoadInfo = async () => {
     setLoading(true);
-    await doFetchUser()
-    await doFetchGroup()
+    setFetched(false)
+    await doFetchUser();
+    await doFetchGroup();
+    setFetched(true)
     setLoading(false);
+  
   };
 
   const imageStyle = {
     borderRadius: '15px',
     border: '0',
     boxShadow: '5px 5px 5px 5px #000000'
-  }
-
-  const { user } = useStore(state => state)
+  };
 
   const onSubmit = async (data) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const payload = { email: data.email, password: data.password };
       const response = await apiFetch({ payload, method: 'POST' }, '/api/login');
-      localStorage.setItem('token', response.token); // Almacenar el token en localStorage
-      await handleLoadInfo();
-      console.log('hola soy el type' , doFetchGroup)
-      if (user.userType == 'student'){
-        router.refresh();
-        router.push(`/auth/students`);
-        router.refresh();
-      } else if (user.userType == 'professor'){
-        router.push(`/auth/professors`);
-        router.refresh();
+      
+      if (response.error) {
+        throw new Error(response.error);
+      }else{
+        localStorage.setItem('token', response.token); // Almacenar el token en localStorage
+        await handleLoadInfo();
       }
 
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       setError(error.message);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
-  if(loading){
-    return <Loadview/>
+  if (loading) {
+    return <Loadview />;
   }
 
+  if(fetched){
+    router.push(`/auth/${user.userType}s`)
+  }
 
   return (
     <Grid container sx={{ height: 'min100vh', width: 'auto', justifyContent: 'space-evenly', alignItems: 'center', m: 4 }}>
@@ -151,15 +151,26 @@ function LoginPage() {
           </Box>
         </Box>
       </Grid>
-        <Image
+      <Image
         src= "/images/ajoloteMimido.png"
         width={550}
         height={550} 
         style={imageStyle}
-        />
+        alt='Axolotl mimido'
+      />
     </Grid>
   );
 }
 
-export default LoginPage;
+const Wrapper = () => {
+  const { user } = useStore(state => state);
+  const router = useRouter();
   
+  if(user.userType != undefined){
+    router.push(`/auth/${user.userType}s/`)
+  }
+
+  return <LoginPage/>
+}
+
+export default Wrapper;
