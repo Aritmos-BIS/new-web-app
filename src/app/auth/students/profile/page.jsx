@@ -23,7 +23,7 @@ function StudentPage() {
               <Typography variant="h5" component="h2" gutterBottom>Nombre: <Typography variant="h6" component="p">{user.name}</Typography></Typography>
               <Typography variant="h5" component="h2" gutterBottom>Apellidos: <Typography variant="h6" component="p">{user.lastname}</Typography></Typography>
               <Typography variant="h5" component="h2" gutterBottom>Grupo al que pertenece: <Typography variant="h6" component="p">{user.group.name}</Typography></Typography>
-              <Link href={'/auth/users/students/profile/configurations'}>
+              <Link href={'/auth/students/profile/configurations'}>
               <Button 
                 variant="contained" 
                 sx={{ backgroundColor: 'purple', color: 'white', mt: 2, '&:hover': { backgroundColor: 'skyblue', color: 'black' } }}

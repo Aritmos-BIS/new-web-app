@@ -30,6 +30,8 @@ function LoginPage() {
     boxShadow: '5px 5px 5px 5px #000000'
   }
 
+  const { user } = useStore(state => state)
+
   const onSubmit = async (data) => {
     try {
       setLoading(true)
@@ -37,8 +39,16 @@ function LoginPage() {
       const response = await apiFetch({ payload, method: 'POST' }, '/api/login');
       localStorage.setItem('token', response.token); // Almacenar el token en localStorage
       await handleLoadInfo();
-      router.push('/auth/users');
-      router.refresh();
+      console.log('hola soy el type' , doFetchGroup)
+      if (user.userType == 'student'){
+        router.refresh();
+        router.push(`/auth/students`);
+        router.refresh();
+      } else if (user.userType == 'professor'){
+        router.push(`/auth/professors`);
+        router.refresh();
+      }
+
       setLoading(false)
     } catch (error) {
       setError(error.message);
@@ -49,6 +59,7 @@ function LoginPage() {
   if(loading){
     return <Loadview/>
   }
+
 
   return (
     <Grid container sx={{ height: 'min100vh', width: 'auto', justifyContent: 'space-evenly', alignItems: 'center', m: 4 }}>

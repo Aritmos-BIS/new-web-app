@@ -41,12 +41,12 @@ function Navbar() {
             ) : (
               <>
                 <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/users" passHref>
+                  <Link href={`/auth/${user.userType}s`} passHref>
                     <Button style={{ color: '#E0AAFF' }}>Inicio de usuario</Button>
                   </Link>
                 </li>
                 <li style={{ marginRight: '10px' }}>
-                  <Link href={`/auth/users/${user.userType}s/profile`} passHref>
+                  <Link href={`/auth/${user.userType}s/profile`} passHref>
                     <Button style={{ color: '#E0AAFF' }}>
                       {user.userType === 'student' ? 'Perfil de usuario estudiante' : 'Perfil de usuario profesor'}
                     </Button>

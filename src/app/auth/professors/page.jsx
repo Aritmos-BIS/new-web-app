@@ -54,9 +54,9 @@ const ProfessorPage = () => {
 
   const Wrapper = () => (
     <Box sx={{ m: 4, height: '100%' }}>
-      <AuthWrapper>
+      {/* <AuthWrapper> */}
         <ProfessorPage />
-      </AuthWrapper>
+      {/* </AuthWrapper> */}
     </Box>
   )
 

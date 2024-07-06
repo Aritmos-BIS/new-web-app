@@ -24,7 +24,7 @@ function ProfessorPage() {
                   <Typography variant="h6">Clave de Grupo: <b>{user.id}</b></Typography>
                   <Typography variant="h6">Grupo al que pertenece: <b>{user.group.name}</b></Typography>
                   <Box mt={2}>
-                    <Link href={'/auth/users/professors/configurations'}>
+                    <Link href={'/auth/professors/profile/configurations'}>
                     <Button 
                       variant="contained" 
                       color="secondary" 
@@ -33,7 +33,7 @@ function ProfessorPage() {
                       Edita tu perfil
                     </Button>
                     </Link>
-                    <Link href={`/auth/users/professors/group`}>
+                    <Link href={`/auth/professors/group`}>
                     <Button 
                       variant="contained" 
                       color="primary" 
