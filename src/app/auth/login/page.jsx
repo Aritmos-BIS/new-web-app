@@ -24,7 +24,6 @@ function LoginPage() {
     await doFetchGroup();
     setFetched(true)
     setLoading(false);
-  
   };
 
   const imageStyle = {

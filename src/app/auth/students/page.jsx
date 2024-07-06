@@ -1,7 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import { Container, Typography, Box, Paper, Button, Grid } from '@mui/material';
 import Link from 'next/link';
 import { useStore } from '@/libs/store'
@@ -10,13 +9,8 @@ import AuthWrapper from '@/components/AuthWrapper';
 
 
 const StudentPage = () => {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
   const { user } = useStore(state => state)
- 
-  if (loading) {
-    return <Loadview/>;
-  }
 
   return(
     <Container maxWidth="lg">

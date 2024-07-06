@@ -22,7 +22,7 @@ function ProfessorPage() {
                   <Typography variant="h6">Nombre: <b>{user.name}</b></Typography>
                   <Typography variant="h6">Apellidos: <b>{user.lastname}</b></Typography>
                   <Typography variant="h6">Clave de Grupo: <b>{user.id}</b></Typography>
-                  <Typography variant="h6">Grupo al que pertenece: <b>{user.group.name}</b></Typography>
+                  <Typography variant="h6">Nombre de su grupo: <b>{user.group.name}</b></Typography>
                   <Box mt={2}>
                     <Link href={'/auth/professors/profile/configurations'}>
                     <Button 
