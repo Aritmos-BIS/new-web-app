@@ -7,8 +7,8 @@ function Logout() {
   const router = useRouter();
 
   const handleSignOut = () => {
-    // Borrar el token de localStorage
-    localStorage.removeItem('token');
+    // Borrar todo el localStorage
+    localStorage.clear();
 
     // Mostrar mensaje de cierre de sesión
     alert('Cerraste sesión');

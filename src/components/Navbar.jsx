@@ -1,11 +1,16 @@
-import { jwtDecode } from 'jwt-decode';
+'use client'
+
 import Link from 'next/link';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { useStore } from '@/libs/store';
 
-async function Navbar() {
+function Navbar() {
+  const { user } = useStore(state => state);
+
+  const isLoggedIn = user && user.id;
 
   return (
-    <AppBar position="static" style={{backgroundColor:'#3C096C'}}>
+    <AppBar position="static" style={{ backgroundColor: '#3C096C' }}>
       <Toolbar>
         <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
           <img src="/images/logo.png" alt="Logo" style={{ width: '40px', marginRight: '10px' }} />
@@ -15,51 +20,45 @@ async function Navbar() {
         </div>
         <div>
           <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0 }}>
-           
+            {!isLoggedIn ? (
               <>
                 <li style={{ marginRight: '10px' }}>
-                  <Link href="/">
-                    <Button style={{color: '#E0AAFF'}}>Landing Page</Button>
+                  <Link href="/" passHref>
+                    <Button style={{ color: '#E0AAFF' }}>Landing Page</Button>
                   </Link>
                 </li>
                 <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/login">
-                    <Button style={{color: '#E0AAFF'}}>Ingresar</Button>
+                  <Link href="/auth/login" passHref>
+                    <Button style={{ color: '#E0AAFF' }}>Ingresar</Button>
                   </Link>
                 </li>
                 <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/register">
-                    <Button style={{color: '#E0AAFF'}}>Registrarse</Button>
+                  <Link href="/auth/register" passHref>
+                    <Button style={{ color: '#E0AAFF' }}>Registrarse</Button>
                   </Link>
                 </li>
               </>
-           
+            ) : (
               <>
                 <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/users">
-                    <Button style={{color: '#E0AAFF'}}>Inicio de usuario</Button>
+                  <Link href="/auth/users" passHref>
+                    <Button style={{ color: '#E0AAFF' }}>Inicio de usuario</Button>
                   </Link>
                 </li>
-
                 <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/users/professors/profile">
-                    <Button style={{color: '#E0AAFF'}}>perfil de usuario profesor</Button>
+                  <Link href={`/auth/users/${user.userType}s/profile`} passHref>
+                    <Button style={{ color: '#E0AAFF' }}>
+                      {user.userType === 'student' ? 'Perfil de usuario estudiante' : 'Perfil de usuario profesor'}
+                    </Button>
                   </Link>
                 </li>
-
                 <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/users/students/profile">
-                    <Button style={{color: '#E0AAFF'}}>perfil de usuario estudiante</Button>
-                  </Link>
-                </li>
-               
-                <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/logout">
-                    <Button style={{color: '#E0AAFF'}}>Salir</Button>
+                  <Link href="/auth/logout" passHref>
+                    <Button style={{ color: '#E0AAFF' }}>Salir</Button>
                   </Link>
                 </li>
               </>
-          
+            )}
           </ul>
         </div>
       </Toolbar>
