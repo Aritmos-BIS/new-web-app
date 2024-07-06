@@ -25,6 +25,10 @@ export const useStore = create(
           console.error('Error fetching group:', error);
         }
       },
+      logout: () => {
+        localStorage.clear();
+        set({ user: {}, group: {} });
+      },
     }),
     {
       name: 'store', // Name for local storage key
