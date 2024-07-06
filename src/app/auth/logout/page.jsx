@@ -2,20 +2,16 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Container, Box, Typography, Button, Paper } from '@mui/material';
+import { useStore } from '@/libs/store';
 
 function Logout() {
   const router = useRouter();
+  const { logout } = useStore(state => state);
 
   const handleSignOut = () => {
-    // Borrar todo el localStorage
-    localStorage.clear();
-
-    // Mostrar mensaje de cierre de sesión
+    logout();
     alert('Cerraste sesión');
-
-    // Redirigir al usuario a la página de inicio
     router.push('/');
-    router.refresh();
   };
 
   return (
@@ -28,7 +24,7 @@ function Logout() {
           borderRadius: 2,
           boxShadow: 3,
           textAlign: 'center',
-          width: '60%'
+          width: '60%',
         }}
       >
         <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
