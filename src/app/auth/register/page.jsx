@@ -1,69 +1,82 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import { Grid, Box, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import Image from "next/image";
+import { useState } from "react";
+import Loadview from "@/components/Loadview";
+import { apiFetch } from "@/libs/request";
 
 function RegisterPage() {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm();
+  const { register, handleSubmit, formState: { errors }, watch, setError, clearErrors } = useForm();
   const router = useRouter();
   const isProfessor = watch("isprofessor");
+  const [loading, setLoading] = useState(false);
 
   const imageStyle = {
     borderRadius: '15px',
     border: '0',
     boxShadow: '5px 5px 5px 5px #000000'
-  }
+  };
 
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true);
+    clearErrors();
+
     if (data.password !== data.confirmPassword) {
-      return alert("Las contraseñas no coinciden");
+      setLoading(false);
+      return setError("confirmPassword", { type: "manual", message: "Las contraseñas no coinciden" });
     }
 
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          lastname: data.lastname,
-          email: data.email,
-          password: data.password,
-          groupId: isProfessor ? null : data.groupId,
-        }),
-      });
+      const payload = {
+        name: data.name,
+        lastname: data.lastname,
+        email: data.email,
+        password: data.password,
+        groupId: isProfessor ? null : data.groupId,
+      };
+
+      const res = await apiFetch({ payload, method: 'POST' }, '/api/register');
 
       if (res.ok) {
         alert("Registro Exitoso");
+        setLoading(false);
         router.push("/auth/login");
       } else {
         const errorData = await res.json();
-        alert(errorData.message || "Hubo un error en el registro. Por favor, inténtalo de nuevo.");
+        setLoading(false);
+
+        if (errorData.error) {
+          if (errorData.details) {
+            setError("server", { type: "manual", message: `${errorData.error}: ${errorData.details}` });
+          } else {
+            setError("server", { type: "manual", message: errorData.error });
+          }
+        } else {
+          setError("server", { type: "manual", message: "Hubo un error en el registro. Por favor, inténtalo de nuevo." });
+        }
       }
     } catch (error) {
-      alert("Error en el servidor. Por favor, inténtalo de nuevo más tarde.");
+      setLoading(false);
+      setError("server", { type: "manual", message: "Error en el servidor. Por favor, inténtalo de nuevo más tarde." });
     }
   });
 
+  if (loading) {
+    return <Loadview />;
+  }
+
   return (
-    <Grid container sx={{ height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+    <Grid container sx={{ height: '90vh', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
       <Grid item sx={{ backgroundColor: '#7B2CBF', height: 'auto', width: '600px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4, m: 4 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-          textAlign: 'center'
-         }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
           <Box component="form" noValidate onSubmit={onSubmit} sx={{ width: '100%' }}>
-          <Typography variant="h4" sx={{ color: 'white' }}>Registro</Typography>
+            <Typography variant="h4" sx={{ color: 'white' }}>Registro</Typography>
+            {errors.server && <Typography color="error" sx={{ mb: 2 }}>{errors.server.message}</Typography>}
             <TextField
-              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3}}
+              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
               variant="filled"
               color="secondary"
               margin="normal"
@@ -145,29 +158,31 @@ function RegisterPage() {
             <Typography color="error" sx={{ height: '24px' }}>
               {errors.confirmPassword ? errors.confirmPassword.message : ' '}
             </Typography>
-            <TextField
-              sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
-              variant="filled"
-              color="secondary"
-              margin="normal"
-              fullWidth
-              id="groupId"
-              label="ID del Grupo"
-              name="groupId"
-              autoComplete="groupId"
-              {...register("groupId")}
-              disabled={isProfessor}
-            />
-            <Typography color="error" sx={{ height: '24px' }}>
-              {errors.groupId ? errors.groupId.message : ' '}
-            </Typography>
+            {!isProfessor && (
+              <>
+                <TextField
+                  sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
+                  variant="filled"
+                  color="secondary"
+                  margin="normal"
+                  fullWidth
+                  id="groupId"
+                  label="ID del Grupo"
+                  name="groupId"
+                  autoComplete="groupId"
+                  {...register("groupId", { required: "ID del Grupo es requerido" })}
+                />
+                <Typography color="error" sx={{ height: '24px' }}>
+                  {errors.groupId ? errors.groupId.message : ' '}
+                </Typography>
+              </>
+            )}
             <FormControlLabel
               control={<Checkbox {...register("isprofessor")} color="primary" />}
               label="Marca esta casilla si eres un profesor"
             />
             <Button
               type="submit"
-              
               sx={{ backgroundColor: '#C77DFF', color: 'white', mt: 1, mx: 'auto' }}
             >
               Ingresar
@@ -176,11 +191,13 @@ function RegisterPage() {
         </Box>
       </Grid>
       <Image
-        src= "/images/ajoloteMimido.png"
+        src="/images/ajoloteMimido.png"
         width={550}
-        height={550} 
+        height={550}
         style={imageStyle}
-        />    </Grid>
+        alt="Axolotl mimido"
+      />
+    </Grid>
   );
 }
 
