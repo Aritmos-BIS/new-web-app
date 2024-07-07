@@ -21,29 +21,31 @@ function RegisterPage() {
     }
 
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          lastname: data.lastname,
-          email: data.email,
-          password: data.password,
-          groupId: isProfessor ? null : data.groupId,
-        }),
-      });
-
-      if (res.ok) {
-        alert("Registro Exitoso");
-        router.push("/auth/login");
-      } else {
-        const errorData = await res.json();
-        alert(errorData.message || "Hubo un error en el registro. Por favor, inténtalo de nuevo.");
-      }
+      setLoading(true);
+      const payload = { 
+        name: data.name,
+        lastname: data.lastname, 
+        email: data.email, 
+        password: data.password, 
+        groupId: isProfessor ? null : data.groupId 
+      };
+      const response = await apiFetch({ payload, method: 'POST' }, '/api/register');
+      localStorage.setItem('token', response.token); // Almacenar el token en localStorage
+      await handleLoadInfo();
+      router.push('/auth/users');
+      router.refresh();
+      setLoading(false);
     } catch (error) {
-      alert("Error en el servidor. Por favor, inténtalo de nuevo más tarde.");
+      setError(error.message);
+      setLoading(false);
+    }
+
+    if (res.ok) {
+      alert("Registro Exitoso");
+      router.push("/auth/login");
+    } else {
+      const errorData = await res.json();
+      alert(errorData.message || "Hubo un error en el registro. Por favor, inténtalo de nuevo.");
     }
   });
 
