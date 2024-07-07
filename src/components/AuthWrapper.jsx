@@ -6,7 +6,7 @@ const AuthWrapper = ({ children }, pageType) =>{
   const { user } = useStore(state => state)
 
   if (user.userType != pageType) {
-    router.push(`/auth/${user.userType}/`)
+    router.push(`/auth/${user.userType}s/`)
   }
 
 
