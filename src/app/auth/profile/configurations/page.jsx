@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -9,8 +9,16 @@ import { useStore } from '@/libs/store'
 function ConfigurationPage() {
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
+  const [userType, setUserType] = useState(''); // New state to store the user type
   const router = useRouter();
-  const { doFetchUser, user  } = useStore(state => state)
+  const { doFetchUser, user } = useStore(state => state);
+
+  useEffect(() => {
+    // Assuming the user type is stored in the user object
+    if (user) {
+      setUserType(user.type); // Update this line according to how your user object is structured
+    }
+  }, [user]);
 
   const handleUpdateProfile = async (event) => {
     event.preventDefault();
@@ -23,17 +31,28 @@ function ConfigurationPage() {
       },
       body: JSON.stringify({
         name,
-        lastname,
+        lastname
       }),
     });
 
     if (response.ok) {
       alert('Perfil actualizado con éxito');
-      await doFetchUser()
-      router.push(`/auth/professors`)
-
+      await doFetchUser();
+      if (userType === 'professor') {
+        router.push(`/auth/professors`);
+      } else {
+        router.push(`/auth/students`);
+      }
     } else {
       alert('Error al actualizar el perfil');
+    }
+  };
+
+  const handleCancel = () => {
+    if (userType === 'professor') {
+      router.push(`/auth/professors`);
+    } else {
+      router.push(`/auth/students`);
     }
   };
 
@@ -91,21 +110,20 @@ function ConfigurationPage() {
           onChange={(e) => setLastname(e.target.value)}
         />
         <Box display="flex" justifyContent="space-between" mt={2}>
-          <Link href={`/auth/users/professors`} passHref>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: 'red',
-                color: 'white',
-                ':hover': {
-                  backgroundColor: 'darkred',
-                  color: 'gray',
-                },
-              }}
-            >
-              Cancelar
-            </Button>
-          </Link>
+          <Button
+            onClick={handleCancel}
+            variant="contained"
+            sx={{
+              backgroundColor: 'red',
+              color: 'white',
+              ':hover': {
+                backgroundColor: 'darkred',
+                color: 'gray',
+              },
+            }}
+          >
+            Cancelar
+          </Button>
           <Button
             type="submit"
             variant="contained"

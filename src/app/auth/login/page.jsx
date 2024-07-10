@@ -41,7 +41,7 @@ function LoginPage() {
       if (response.error) {
         throw new Error(response.error);
       }else{
-        localStorage.setItem('token', response.token); // Almacenar el token en localStorage
+        localStorage.setItem('token', response.token);
         await handleLoadInfo();
       }
 

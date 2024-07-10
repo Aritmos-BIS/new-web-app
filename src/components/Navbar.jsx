@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useStore } from '@/libs/store';
 
 function Navbar() {
@@ -9,58 +9,42 @@ function Navbar() {
 
   const isLoggedIn = user && user.id;
 
+  const homeLink = isLoggedIn ? `/auth/${user.userType}s` : '/';
+
   return (
     <AppBar position="static" style={{ backgroundColor: '#3C096C' }}>
       <Toolbar>
-        <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-          <img src="/images/logo.png" alt="Logo" style={{ width: '40px', marginRight: '10px' }} />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Aritmos
-          </Typography>
-        </div>
-        <div>
-          <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0 }}>
-            {!isLoggedIn ? (
-              <>
-                <li style={{ marginRight: '10px' }}>
-                  <Link href="/" passHref>
-                    <Button style={{ color: '#E0AAFF' }}>Landing Page</Button>
-                  </Link>
-                </li>
-                <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/login" passHref>
-                    <Button style={{ color: '#E0AAFF' }}>Ingresar</Button>
-                  </Link>
-                </li>
-                <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/register" passHref>
-                    <Button style={{ color: '#E0AAFF' }}>Registrarse</Button>
-                  </Link>
-                </li>
-              </>
-            ) : (
-              <>
-                <li style={{ marginRight: '10px' }}>
-                  <Link href={`/auth/${user.userType}s`} passHref>
-                    <Button style={{ color: '#E0AAFF' }}>Inicio de usuario</Button>
-                  </Link>
-                </li>
-                <li style={{ marginRight: '10px' }}>
-                  <Link href={`/auth/${user.userType}s/profile`} passHref>
-                    <Button style={{ color: '#E0AAFF' }}>
-                      {user.userType === 'student' ? 'Perfil de usuario estudiante' : 'Perfil de usuario profesor'}
-                    </Button>
-                  </Link>
-                </li>
-                <li style={{ marginRight: '10px' }}>
-                  <Link href="/auth/logout" passHref>
-                    <Button style={{ color: '#E0AAFF' }}>Salir</Button>
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
+        <Link href={homeLink} passHref>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', textDecoration: 'none', flexGrow: 1 }}
+          >
+            <img src="/images/logo.png" alt="Logo" style={{ width: '40px', marginRight: '10px' }} />
+            <Typography variant="h6" component='div' sx={{ color: '#E0AAFF', textDecoration: 'none' }}>
+              Aritmos
+            </Typography>
+          </Box>
+        </Link>
+        <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+          {!isLoggedIn ? (
+            <>
+              <Link href="/auth/login" passHref>
+                <Button style={{ color: '#E0AAFF' }}>Ingresar</Button>
+              </Link>
+              <Link href="/auth/register" passHref>
+                <Button style={{ color: '#E0AAFF' }}>Registrarse</Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href={`/auth/profile`} passHref>
+                <Button style={{ color: '#E0AAFF' }}>Perfil</Button>
+              </Link>
+              <Link href="/auth/logout" passHref>
+                <Button style={{ color: '#E0AAFF' }}>Salir</Button>
+              </Link>
+            </>
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   );

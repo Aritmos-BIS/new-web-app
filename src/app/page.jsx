@@ -1,7 +1,15 @@
+'use client'
+
 import React from 'react';
 import { Grid, Typography, Container, Box } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 const LandingPage = () => {
+
+  const router = useRouter()
+
+  router.push("/")
+
   return (
     <Grid container sx={{ minHeight: '100vh' }}>
       <Grid
@@ -15,8 +23,8 @@ const LandingPage = () => {
           color: 'white',
           textAlign: 'center',
           height: '100%',
-          minHeight: '100vh',  // Ajusta la altura máxima de la pantalla
-          overflow: 'hidden',  // Evita que el contenido se desborde
+          minHeight: '100vh',
+          overflow: 'hidden',
         }}
       >
         <Container maxWidth="md">
