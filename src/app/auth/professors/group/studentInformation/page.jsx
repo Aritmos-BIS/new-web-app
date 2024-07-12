@@ -6,7 +6,7 @@ function ConfigurationPage() {
 
   return (
     <Container sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Box component="form" onSubmit={onSubmit} sx={{ bgcolor: 'purple.600', boxShadow: 3, p: 4, borderRadius: 2, width: { lg: '25%', md: '50%', xs: '90%' }, color: 'white' }}>
+        <Box component="form" sx={{ bgcolor: 'purple.600', boxShadow: 3, p: 4, borderRadius: 2, width: { lg: '25%', md: '50%', xs: '90%' }, color: 'white' }}>
           <Typography variant="h4" fontWeight="bold" textAlign="center" mb={4}>Edicion de perfil</Typography>
           <TextField
             fullWidth

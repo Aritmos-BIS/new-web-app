@@ -23,11 +23,11 @@ function ProfilePage() {
           <Grid item xs={12} md={6}>
             <Paper sx={{ bgcolor: 'white', color: 'black', p: 4, borderRadius: 2 }}>
               <Typography variant="h3" component="h1" gutterBottom>Perfil del usuario</Typography>
-              <Typography variant="h5" component="h2" gutterBottom>Nombre: <Typography variant="h6" component="p">{user.name}</Typography></Typography>
-              <Typography variant="h5" component="h2" gutterBottom>Apellidos: <Typography variant="h6" component="p">{user.lastname}</Typography></Typography>
+              <Typography variant="h5" component="h2" gutterBottom>Nombre: <Typography variant="h6" component="p">{user?.name}</Typography></Typography>
+              <Typography variant="h5" component="h2" gutterBottom>Apellidos: <Typography variant="h6" component="p">{user?.lastname}</Typography></Typography>
               <Typography variant="h5" component="h2" gutterBottom>
                 {user.userType == 'professor' ? "Nombre de su grupo:" : "Grupo al que pertenece:"} 
-                <Typography variant="h6" component="p">{user.group.name}</Typography>
+                <Typography variant="h6" component="p">{user?.group?.name}</Typography>
               </Typography>
               {user.userType == 'professor' && (
                 <>
