@@ -14,18 +14,18 @@ export const GET = async (req) => {
 
   try {
 
-    const answerPlayer1 = R.omit(['arimal'], player1)
-    const answerPlayer2 = R.omit(['arimal'], player2)
+    const arimalPlayer1 = R.omit(['turn', 'correct'], player1)
+    const arimalPlayer2 = R.omit(['turn', 'correct'], player2)
 
-    if (!answerPlayer1 && !answerPlayer2) {
-      return NextResponse.json({ error: 'players not found' }, { status: 404 });
+    if (!arimalPlayer1 && !arimalPlayer2) {
+      return NextResponse.json({ error: 'arimals not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ turn: battle.turn, answerPlayer1, answerPlayer2 }, { status: 200 });
+    return NextResponse.json({ arimalPlayer1, arimalPlayer2 }, { status: 200 });
 
   } catch (error) {
-    console.error('Error updating battle:', error);
-    return NextResponse.json({ error: 'Failed to update battle' }, { status: 500 });
+    console.error('Error getting arimals:', error);
+    return NextResponse.json({ error: 'Failed to get atimals' }, { status: 500 });
   }
 
 
@@ -39,21 +39,15 @@ export const PUT = async (req) => {
   const battle = battles[battleId];
 
   const { player1, player2, ...body } = battle.toObject();
+  const { arimal: arimal1, ...bodyPlayer1 } = player1
+  const { arimal: arimal2, ...bodyPlayer2 } = player2
+  
 
   const data = await req.json();
-  const { playerId } = data
+  const { arimalPlayer1, arimalPlayer2 } = data
 
-  let updatedBody
-  if (playerId == battle.player1.playerId) {
-    const { arimal } = player1;
-    updatedBody = { ...body, player1: { ...data, arimal }, player2 };
-  } else if (playerId == battle.player2.playerId) {
-    const { arimal } = player2; 
-    updatedBody = { ...body, player1, player2: { ...data, arimal } };
-  } else {
-    return NextResponse.json({ error: 'Player not found' }, { status: 404 });
-  }
-
+  
+  const updatedBody = { ...body, player1: { ...bodyPlayer1, arimal: { ...arimalPlayer1 } }, player2: { ...bodyPlayer2, arimal: { ...arimalPlayer2 } } }
 
   try {
     
