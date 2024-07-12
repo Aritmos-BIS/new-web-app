@@ -23,10 +23,6 @@ export const GET = async (req) => {
   try {
     const battle = await Battle.find()
 
-    const player1 = battle[battle.length-1].player1
-
-    console.log({player1})
-
     if (!battle || battle.length === 0) {
       return NextResponse.json({ error: 'No battles found' }, { status: 404 });
     }
@@ -60,5 +56,19 @@ export const PUT = async (req) => {
   } catch (error) {
     console.error('Error updating battle:', error);
     return NextResponse.json({ error: 'Failed to update battle' }, { status: 500 });
+  }
+};
+
+export const DELETE = async (req) => {
+  await mongoConnection();
+  
+  try {
+    const result = await Battle.deleteMany({});
+
+    return NextResponse.json({ message: 'All battles deleted successfully', deletedCount: result.deletedCount }, { status: 200 });
+
+  } catch (error) {
+    console.error('Error deleting battles:', error);
+    return NextResponse.json({ error: 'Failed to delete battles' }, { status: 500 });
   }
 };
