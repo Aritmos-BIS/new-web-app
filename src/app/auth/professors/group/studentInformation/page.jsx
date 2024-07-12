@@ -1,5 +1,6 @@
 
 import { Container, Box, TextField, Button, Typography, Grid } from '@mui/material';
+import Link from 'next/link';
 
 function ConfigurationPage() {
 
