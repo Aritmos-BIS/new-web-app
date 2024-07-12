@@ -6,7 +6,7 @@ const ArimalSchema = new Schema({
   arimalId: {type: Number,  required: true},
   hp:{type: Number, required: true},
   attack:{type: Number, required: true},
-
+  type:{type: String, required: true}
 })
 
 const PlayerSchema = new Schema({
@@ -14,7 +14,7 @@ const PlayerSchema = new Schema({
   playerId: {type: Number,  required: true},
   turn: {type: Number, required: true},
   correct: {type: Boolean, required: false},
-  time: {type: Number, required: false},
+  level: {type: String, required: false},
   arimal: {type: ArimalSchema, required: false}
 })
 
