@@ -38,36 +38,19 @@ export const GET = async (req) => {
 export const PUT = async (req) => {
   await mongoConnection();
     
-  const battles = await Battle.find();
-  const battleId = battles.length - 1;
-  const battle = battles[battleId];
-
-  const { player1, player2, ...body } = battle.toObject();
-
-  const data = await req.json();
-  const { playerId } = data
-
-  let updatedBody
-  if (playerId == battle.player1.playerId) {
-    const { arimal } = player1;
-    updatedBody = { ...body, player1: { ...data, arimal }, player2 };
-  } else if (playerId == battle.player2.playerId) {
-    const { arimal } = player2; 
-    updatedBody = { ...body, player1, player2: { ...data, arimal } };
-  } else {
-    return NextResponse.json({ error: 'Player not found' }, { status: 404 });
-  }
-
+  const battles = await Battle.find()
+  const id = battles.length - 1
 
   try {
-    
-    const updatedBattle = await Battle.findByIdAndUpdate(battle._id, updatedBody, { new: true });
+    const body = await req.json();
+
+    const updatedBattle = await Battle.findByIdAndUpdate(id, body, { new: true });
 
     if (!updatedBattle) {
       return NextResponse.json({ error: 'Battle not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ body: updatedBody }, { status: 200 });
+    return NextResponse.json({ updatedBattle }, { status: 200 });
 
   } catch (error) {
     console.error('Error updating battle:', error);
@@ -87,4 +70,13 @@ export const DELETE = async (req) => {
     console.error('Error deleting battles:', error);
     return NextResponse.json({ error: 'Failed to delete battles' }, { status: 500 });
   }
+};
+
+export const OPTIONS = async () => {
+  return NextResponse.json({}, { status: 204, headers: {
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Origin": "*", // Change this to your actual origin
+    "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+    "Access-Control-Allow-Headers": "Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+  }});
 };
