@@ -14,15 +14,15 @@ function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [fetched, setFetched] = useState(false)
+  const [fetched, setFetched] = useState(false);
   const { doFetchUser, doFetchGroup, user } = useStore(state => state);
 
   const handleLoadInfo = async () => {
     setLoading(true);
-    setFetched(false)
+    setFetched(false);
     await doFetchUser();
     await doFetchGroup();
-    setFetched(true)
+    setFetched(true);
     setLoading(false);
   };
 
@@ -40,7 +40,7 @@ function LoginPage() {
       
       if (response.error) {
         throw new Error(response.error);
-      }else{
+      } else {
         localStorage.setItem('token', response.token);
         await handleLoadInfo();
       }
@@ -52,12 +52,14 @@ function LoginPage() {
     }
   };
 
+  useEffect(() => {
+    if (fetched) {
+      router.push(`/auth/${user.userType}s`);
+    }
+  }, [fetched, router, user.userType]);
+
   if (loading) {
     return <Loadview />;
-  }
-
-  if(fetched){
-    router.push(`/auth/${user.userType}s`)
   }
 
   return (
@@ -165,11 +167,13 @@ const Wrapper = () => {
   const { user } = useStore(state => state);
   const router = useRouter();
   
-  if(user.userType != undefined){
-    router.push(`/auth/${user.userType}s/`)
-  }
+  useEffect(() => {
+    if (user.userType != undefined) {
+      router.push(`/auth/${user.userType}s/`);
+    }
+  }, [router, user.userType]);
 
-  return <LoginPage/>
+  return <LoginPage />;
 }
 
 export default Wrapper;
