@@ -14,8 +14,8 @@ export const GET = async (req) => {
 
   try {
 
-    const arimalPlayer1 = R.omit(['turn', 'correct'], player1)
-    const arimalPlayer2 = R.omit(['turn', 'correct'], player2)
+    const arimalPlayer1 = R.omit(['turn', 'correct', 'level'], player1)
+    const arimalPlayer2 = R.omit(['turn', 'correct', 'level'], player2)
 
     if (!arimalPlayer1 && !arimalPlayer2) {
       return NextResponse.json({ error: 'arimals not found' }, { status: 404 });

@@ -40,7 +40,6 @@ export const PUT = async (req) => {
     
   const battles = await Battle.find()
   const id = battles.length - 1
-  const battle = await Battle.findById()
 
   try {
     const body = await req.json();
