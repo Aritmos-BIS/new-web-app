@@ -1,15 +1,7 @@
-'use client'
-
 import React, { useEffect } from 'react';
 import { Grid, Typography, Container, Box } from '@mui/material';
-import { useRouter } from 'next/navigation';
 
 const LandingPage = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push("/");
-  }, [router]);
 
   return (
     <Grid container sx={{ minHeight: '100vh' }}>
