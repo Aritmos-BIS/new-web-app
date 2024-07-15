@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Grid, Typography, Container, Box } from '@mui/material';
 
 const LandingPage = () => {
