@@ -236,8 +236,9 @@ const BattlePage = () => {
         }, 3000);
       }
       setCurrentGif2(idleGif2);
-      
-
+    
+    }
+    
   const lifeUpdateP1 = async () => {
     try {
       const response = await apiFetch('/api/battle', {
