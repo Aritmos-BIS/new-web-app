@@ -50,17 +50,26 @@ const BattlePage = () => {
   const idleGif2 = '';
   const Arimal2 = '';
 
-  if(textGame == 'waiting'){
-    setTextGame('Esperando a que los jugadores contesten la pregunta')
-  }else if(textGame == 'p1Attack'){
-    setTextGame(Arimal1 + ' ataco a ' + Arimal2)
-  }else if(textGame == 'p2Attack'){
-    setTextGame(Arimal2 + ' ataco a ' + Arimal1)
-  }else if(textGame == 'p1Missed'){
-    setTextGame(Arimal1 + ' fallo el ataque a ' + Arimal2)
-  }else if(textGame == 'p2Missed'){
-    setTextGame(Arimal2 + ' fallo el ataque a ' + Arimal1)
+  switch (textGame) {
+    case 'waiting':
+      setTextGame('Esperando a que los jugadores contesten la pregunta');
+      break;
+    case 'p1Attack':
+      setTextGame(Arimal1 + ' ataco a ' + Arimal2);
+      break;
+    case 'p2Attack':
+      setTextGame(Arimal2 + ' ataco a ' + Arimal1);
+      break;
+    case 'p1Missed':
+      setTextGame(Arimal1 + ' fallo el ataque a ' + Arimal2);
+      break;
+    case 'p2Missed':
+      setTextGame(Arimal2 + ' fallo el ataque a ' + Arimal1);
+      break;
+    default:
+      break;
   }
+  
 
 
   const getArimalImageP1 = (id) => {
@@ -130,7 +139,7 @@ const BattlePage = () => {
   const handleSaveSelection = async () => {
     console.log("Payload to send:", payload);
     try {
-      const response = await apiFetch('/api/battle', {
+      const response = await fetch('/api/battle', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -241,17 +250,21 @@ const BattlePage = () => {
     
   const lifeUpdateP1 = async () => {
     try {
-      const response = await apiFetch('/api/battle', {
+      const response = await apiFetch('/api/battle/arimals', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: {
-          player2:{
-            hp: player2Lives 
+        body:{
+          player1:{
+            Arimal:{
+              Id: battleData.player1.Arimal.id,
+              Hp: player1Lives,
+              Attack: attack,
+              Type: ''
           }
         }
-        })
+        }})
         if (!response.ok) {
           throw new Error(`Failed to update battle: ${textResponse}`);
         }
@@ -265,17 +278,21 @@ const BattlePage = () => {
 
     const lifeUpdateP2 = async () => {
       try {
-        const response = await apiFetch('/api/battle', {
+        const response = await apiFetch('/api/battle/arimals', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: {
+          body:{
             player2:{
-              hp: player2Lives 
+              Arimal:{
+                Id: battleData.player2.Arimal.id,
+                Hp: player2Lives,
+                Attack: attack,
+                Type: ''
             }
           }
-          })
+          }})
           if (!response.ok) {
             throw new Error(`Failed to update battle: ${textResponse}`);
           }
@@ -286,6 +303,7 @@ const BattlePage = () => {
           console.error('Error updating battle:', error);
         }
       };
+    }
 
   useEffect(() => {
     if (phase === 'battle') {
