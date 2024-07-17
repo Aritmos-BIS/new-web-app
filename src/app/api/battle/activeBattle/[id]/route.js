@@ -14,11 +14,11 @@ export const GET = async (req, { params }) => {
       return NextResponse.json({ error: 'battle not found' }, { status: 404 });
     }
 
-    if(params.id == battle.player1.playerId || params.id == battle.player1.playerId){
+    if(params.id == battle.player1.playerId || params.id == battle.player2.playerId){
       return NextResponse.json({ activeBattle: true }, { status: 200 });
     }
 
-    return NextResponse.json({ activeBattle: true }, { status: 200 });
+    return NextResponse.json({ activeBattle: false }, { status: 200 });
 
   } catch (error) {
     console.error('Error fetching battles:', error);
