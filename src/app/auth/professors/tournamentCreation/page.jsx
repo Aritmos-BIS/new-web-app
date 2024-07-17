@@ -4,12 +4,13 @@ import React, { useState } from 'react';
 import { useStore } from '@/libs/store';
 import { useRouter } from 'next/navigation';
 import { Container, Typography, ListItemText, Checkbox, Button, Card } from '@mui/material';
+import { apiFetch } from '@/libs/request';
 
 const GroupPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   const { group } = useStore(state => state);
   const [selectedStudents, setSelectedStudents] = useState([]);
-  
+
   const handleCheckboxChange = (studentId) => {
     if (selectedStudents.includes(studentId)) {
       setSelectedStudents(selectedStudents.filter(id => id !== studentId));
@@ -18,28 +19,43 @@ const GroupPage = () => {
     }
   };
 
+  const payload = {
+    _id: 2,
+    turn: 0,
+    player1: {
+      playerId: selectedStudents[0],
+      turn: 0,
+    },
+    player2: {
+      playerId: selectedStudents[1],
+      turn: 0,
+    }
+  };
+
   const handleSaveSelection = async () => {
+    console.log("Payload to send:", payload);
     try {
-      const response = await fetch('/api/tournament', {
+      const response = await apiFetch('/api/battle', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ selectedStudents }),
+        body: JSON.stringify(payload),
       });
-      
+
+      const textResponse = await response.text();
+      console.log("Raw response:", textResponse);
+
       if (!response.ok) {
-        throw new Error('Failed to save selection');
+        throw new Error(`Failed to save selection: ${textResponse}`);
       }
 
-      const result = await response.json();
-      console.log("IDs de estudiantes seleccionados:", selectedStudents);
-      console.log("Response:", result);
-      router.push('/auth/professors/tournamentStart')
+      const result = JSON.parse(textResponse);
+      console.log("Parsed response:", result);
+      router.push('/auth/professors/tournamentStart');
     } catch (error) {
       console.error('Error saving selection:', error);
     }
-    router.push('/auth/professors/tournamentStart')
   };
 
   return (

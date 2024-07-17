@@ -14,7 +14,6 @@ const BattleSchema = new Schema({
   }
 });
 
-// Esquema del torneo
 const TournamentSchema = new Schema({
   profesorId: { type: Number, required: true },
   batallas: { type: [BattleSchema], required: true }

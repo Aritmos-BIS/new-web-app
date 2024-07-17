@@ -1,11 +1,20 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useStore } from '@/libs/store';
 import { Container, Typography, Card, ListItemText } from '@mui/material';
 
 const StudentsInfoPage = () => {
-  const { group } = useStore(state => state);
+
+  const { doFetchGroup, group } = useStore(state => state);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await doFetchGroup();
+    };
+
+    fetchData();
+  }, [doFetchGroup]);
   
   return (
     <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
