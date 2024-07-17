@@ -35,30 +35,83 @@ const BattlePage = () => {
     }
   };
 
+  const [textInformation, setTextInformation] = useState('waiting');
+  const [textGame, setTextGame] = useState('Esperando respuestas');
+
+  const [currentGif1, setCurrentGif1] = useState(getArimalImageP1(battleData.player1.arimal.id));
+  const [currentGif2, setCurrentGif2] = useState(getArimalImageP2(battleData.player2.arimal.id));
+
+  const attackGif1 = '';
+  const attackedGif1 = '';
+  const idleGif1 = '';
+  const Arimal1 = '';
+  const attackGif2 = '';
+  const attackedGif2 = '';
+  const idleGif2 = '';
+  const Arimal2 = '';
+
+  if(textGame == 'waiting'){
+    setTextGame('Esperando a que los jugadores contesten la pregunta')
+  }else if(textGame == 'p1Attack'){
+    setTextGame(Arimal1 + ' ataco a ' + Arimal2)
+  }else if(textGame == 'p2Attack'){
+    setTextGame(Arimal2 + ' ataco a ' + Arimal1)
+  }else if(textGame == 'p1Missed'){
+    setTextGame(Arimal1 + ' fallo el ataque a ' + Arimal2)
+  }else if(textGame == 'p2Missed'){
+    setTextGame(Arimal2 + ' fallo el ataque a ' + Arimal1)
+  }
 
 
-  const [currentGif1, setCurrentGif1] = useState('/gifs/Ari_idle.gif');
-  const [currentGif2, setCurrentGif2] = useState('/gifs/Plus_and_moin_idle.gif');
-
-  const correctGif1 = '/gifs/Ari_att.gif';
-  const incorrectGif1 = '/gifs/Ari_danio.gif';
-  const idleGif1 = '/gifs/Ari_idle.gif';
-  const correctGif2 = '/gifs/Plus_and_moin_danio.gif';
-  const incorrectGif2 = '/gifs/Plus_and_moin_att.gif';
-  const idleGif2 = '/gifs/Plus_and_moin_idle.gif';
-
-  const getAnimalImage = (id) => {
+  const getArimalImageP1 = (id) => {
     switch (id) {
       case 1:
-        return 'url/to/arimal1.jpg'; //carpeta public/arimals 
+        correctGif1 = '/images/arimals/ariAttack.gif';
+        incorrectGif1 = '/images/arimals/ariDmg.gif';
+        Arimal1 = 'Ari';
+        return idleGif1 = '/images/arimals/ariIdle.png';
       case 2:
-        return 'url/to/arimal2.jpg'; 
+        correctGif1 = '/images/arimals/axoAttack.gif';
+        incorrectGif1 = '/images/arimals/axoDmg.gif';
+        Arimal1 = 'Axo';
+        return idleGif1 = '/images/arimals/axoIdle.png';
       case 3:
-        return 'url/to/arimal3.jpg'; 
+        correctGif1 = '/images/arimals/cactiAttack.gif';
+        incorrectGif1 = '/images/arimals/cactiDmg.gif';
+        Arimal1 = 'Cacti';
+        return idleGif1 = '/images/arimals/cactiIdle.png';
       case 4:
-        return 'url/to/arimal4.jpg'; 
+        correctGif1 = '/images/arimals/monarchAttack.gif';
+        incorrectGif1 = '/images/arimals/monarchDmg.gif';
+        Arimal1 = 'Monarch';
+        return idleGif1 = '/images/arimals/monarchIdle.png';
       default:
-        return 'url/to/default.jpg'; 
+    }
+  };
+
+  const getArimalImageP2 = (id) => {
+    switch (id) {
+      case 1:
+        correctGif2 = '/images/arimals/ariAttack.gif';
+        incorrectGif2 = '/images/arimals/ariDmg.gif';
+        Arimal2 = 'Ari';
+        return idleGif2 = '/images/arimals/ariIdle.png';
+      case 2:
+        correctGif2 = '/images/arimals/axoAttack.gif';
+        incorrectGif2 = '/images/arimals/axoDmg.gif';
+        Arimal2 = 'Axo';
+        return idleGif2 = '/images/arimals/axoIdle.png';
+      case 3:
+        correctGif2 = '/images/arimals/cactiAttack.gif';
+        incorrectGif2 = '/images/arimals/cactiDmg.gif';
+        Arimal2 = 'Cacti';
+        return idleGif2 = '/images/arimals/cactiIdle.png';
+      case 4:
+        correctGif2 = '/images/arimals/monarchAttack.gif';
+        incorrectGif2 = '/images/arimals/monarchDmg.gif';
+        Arimal2 = 'Monarch';
+        return idleGif2 = '/images/arimals/monarchIdle.png';
+      default:
     }
   };
 
@@ -141,39 +194,49 @@ const BattlePage = () => {
       attack = 10
     }
 
-      if (isCorrect1) {
-        setPlayer2Lives(player2Lives => {
-          player2Lives = player2Lives - attack;
-          if (player2Lives <= 0) {
-            setPhase('winner');
-          }
-        });
-        setCurrentGif1(correctGif1);
-        lifeUpdateP1()
-        //espera 3 seg
-      } else {
-        setCurrentGif1(idleGif1);
-        //espera 3 seg
-      }
-
+    if (isCorrect1) {
+      setPlayer2Lives(player2Lives => {
+        player2Lives = player2Lives - attack;
+        if (player2Lives <= 0) {
+          setPhase('winner');
+        }
+        return player2Lives;
+      });
+      setCurrentGif1(attackGif1);
+      setCurrentGif2(attackedGif2);
+      lifeUpdateP2();
+      setTextInformation('p1Attack');
+      setTimeout(() => {
+      }, 3000);
+    } else {
+      setTextInformation('p1Missed');
+      setTimeout(() => {
+      }, 3000);
+    }
+    setCurrentGif1(idleGif1);
+    
+    
       if (isCorrect2) {
         setPlayer1Lives(player1Lives => {
           player1Lives = player1Lives - attack;
           if (player1Lives <= 0) {
             setPhase('winner');
           }
+          return player1Lives;
         });
-        setCurrentGif2(correctGif2);
-        lifeUpdateP2()
-        //espera 3 seg
+        setCurrentGif2(attackGif2);
+        setCurrentGif1(attackedGif1);
+        lifeUpdateP1();
+        setTextInformation('p2Attack');
+        setTimeout(() => {
+        }, 3000);
       } else {
-        //ONFO CAMBIO
-        //espera 3 seg
+        setTextInformation('p2Missed');
+        setTimeout(() => {
+        }, 3000);
       }
-
-    setTimeout(() => {
-    }, 5000);
-  };
+      setCurrentGif2(idleGif2);
+      
 
   const lifeUpdateP1 = async () => {
     try {
@@ -227,19 +290,12 @@ const BattlePage = () => {
     if (phase === 'battle') {
       const interval = setInterval(() => {
         checkAnswer();
-      }, 62000); // Check answer every 10 seconds
+      }, 62000); 
 
       return () => clearInterval(interval);
     }
   }, [phase]);
 
-  useEffect(() => {
-    if (phase === 'battle') {
-      if (player1Lives === 0 || player2Lives === 0) {
-        setPhase('winner');
-      }
-    }
-  }, [player1Lives, player2Lives, phase]);
 
   const startBattle = async () => {
     try {
