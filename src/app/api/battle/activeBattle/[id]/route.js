@@ -15,7 +15,7 @@ export const GET = async (req, { params }) => {
     }
 
     if(params.id == battle.player1.playerId || params.id == battle.player2.playerId){
-      return NextResponse.json({ activeBattle: true }, { status: 200 });
+      return NextResponse.json({ activeBattle: true, player1: battle.player1.name,  player2: battle.player2.name }, { status: 200 });
     }
 
     return NextResponse.json({ activeBattle: false }, { status: 200 });

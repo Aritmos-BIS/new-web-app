@@ -20,10 +20,12 @@ export const GET = async (req) => {
   }
 
   const { player1, player2 } = battle.toObject();
+  
+  console.log({player1})
 
   try {
-    const arimalPlayer1 = R.omit(['turn', 'correct', 'level'], player1);
-    const arimalPlayer2 = R.omit(['turn', 'correct', 'level'], player2);
+    const arimalPlayer1 = R.omit(['turn', 'correct', 'level', 'name'], player1);
+    const arimalPlayer2 = R.omit(['turn', 'correct', 'level', 'name'], player2);
 
     if (!arimalPlayer1 && !arimalPlayer2) {
       return NextResponse.json({ error: 'Arimals not found' }, { status: 404 });
