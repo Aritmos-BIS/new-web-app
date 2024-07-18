@@ -37,7 +37,7 @@ const ProfessorPage = () => {
                   Ingresa a tu perfil
                 </Button>
               </Link>
-              <Link href={`/auth/professors/tournamentCreation`}>
+              <Link href={`/auth/professors/tournamentStart`}>
                 <Button variant="contained" color="warning" sx={{ mt: 2, width: '60%', display: 'block', margin: '20px auto' }}>
                   Iniciar un torneo
                 </Button>
