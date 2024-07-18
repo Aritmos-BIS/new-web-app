@@ -17,9 +17,20 @@ const BattlePage = () => {
   const [phase, setPhase] = useState('groupSelection');
   const [countdown, setCountdown] = useState(3);
 
+  const [image1, setImage1] = useState('');
+  const [arimal1, setArimal1] = useState(null);
+  const [image2, setImage2] = useState('');
+  const [arimal2, setArimal2] = useState(null);
   const [arimalsData, setArimalsData] = useState(null);
 
   const [turn, setTurn] = useState(0)
+
+
+  useEffect(() =>{
+    console.log({arimal1}, {arimal2})
+    setImage1(arimal1?.idleGif)
+    setImage2(arimal2?.idleGif)
+  }, [arimal1, arimal2])
 
   useEffect(() => {
     if (phase === 'countdown') {
@@ -34,6 +45,10 @@ const BattlePage = () => {
       }, 1000);
       return () => clearInterval(timer);
     }
+
+    if (phase === 'initial') {
+      getArimals()
+    }
   }, [phase]);
 
   const handleCheckboxChange = (student, index) => {
@@ -44,6 +59,95 @@ const BattlePage = () => {
       setSelectedStudents([...selectedStudents, studentData]);
     }
   };
+
+  const getArimalImage = (player, id) => {  
+    console.log('get arimal image')
+    switch (id) {
+      case 1:
+        if (player == 1) {
+          setArimal1({
+            attackGif: '/images/arimals/ariAttack.gif',
+            damageGif: '/images/arimals/ariDmg.gif',
+            arimalName: 'Ari',
+            idleGif: '/images/arimals/ariIdle.png'
+          });
+        } else {
+          setArimal2({
+            attackGif: '/images/arimals/ariAttack.gif',
+            damageGif: '/images/arimals/ariDmg.gif',
+            arimalName: 'Ari',
+            idleGif: '/images/arimals/ariIdle.png'
+          });
+        }
+        break;
+      case 2:
+        if (player == 1) {
+          setArimal1({
+            attackGif: '/images/arimals/axoAttack.gif',
+            damageGif: '/images/arimals/axoDmg.gif',
+            arimalName: 'Axo',
+            idleGif: '/images/arimals/axoIdle.png'
+          });
+        } else {
+          setArimal2({
+            attackGif: '/images/arimals/axoAttack.gif',
+            damageGif: '/images/arimals/axoDmg.gif',
+            arimalName: 'Axo',
+            idleGif: '/images/arimals/axoIdle.png'
+          });
+        }
+        break;
+      case 3:
+        if (player == 1) {
+          setArimal1({
+            attackGif: '/images/arimals/cactiAttack.gif',
+            damageGif: '/images/arimals/cactiDmg.gif',
+            arimalName: 'Cacti',
+            idleGif: '/images/arimals/cactiIdle.png'
+          });
+        } else {
+          setArimal2({
+            attackGif: '/images/arimals/cactiAttack.gif',
+            damageGif: '/images/arimals/cactiDmg.gif',
+            arimalName: 'Cacti',
+            idleGif: '/images/arimals/cactiIdle.png'
+          });
+        }
+        break;
+      case 4:
+        if (player == 1) {
+          setArimal1({
+            attackGif: '/images/arimals/monarchAttack.gif',
+            damageGif: '/images/arimals/monarchDmg.gif',
+            arimalName: 'Monarch',
+            idleGif: '/images/arimals/monarchIdle.png'
+          });
+        } else {
+          setArimal2({
+            attackGif: '/images/arimals/monarchAttack.gif',
+            damageGif: '/images/arimals/monarchDmg.gif',
+            arimalName: 'Monarch',
+            idleGif: '/images/arimals/monarchIdle.png'
+          });
+        }
+        break;
+      default:
+        return;
+    }
+  };
+
+  const getArimals = async () => {
+    const response = await apiFetch({ method: 'GET' }, '/api/battle/arimals');
+    if (response?.arimalPlayer1?.arimal?.arimalId != undefined || response?.arimalPlayer2?.arima?.arimalId != undefined) {
+      console.log("si entre")
+      getArimalImage(1, response?.arimalPlayer1?.arimal?.arimalId)  // corregido ararimalPlayer1 a arimalPlayer1
+      getArimalImage(2, response?.arimalPlayer2?.arimal?.arimalId)
+    }else{
+      setTimeout(() => {
+        getArimals()
+      }, 1000)
+    }
+  }
 
   const handleSaveSelection = async () => {
     const payload = {
@@ -65,8 +169,6 @@ const BattlePage = () => {
 
     try {
       await apiFetch({payload, method:'POST'}, '/api/battle')
-      const response = await apiFetch({ method: 'GET' }, '/api/battle/arimals');
-      setArimalsData(response); 
       setPhase('initial');
     } catch (error) {
       console.error('Error saving selection:', error);
@@ -144,22 +246,33 @@ const BattlePage = () => {
     return (
       <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <Typography variant="h4" color="white" gutterBottom>¡Estudiantes Seleccionados!</Typography>
-        <Grid container spacing={2} justifyContent="center">
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
           <Grid item>
             {player1 && (
-              <Card style={{ backgroundColor: '#3C096C', padding: '20px', width: '300px' }}>
+              <Card style={{ backgroundColor: '#3C096C', padding: '35px', width: 'auto' }}>
                 <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
-                <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '150px', height: '150px' }} />
-                <Typography variant='h1'>{arimalsData.arimalPlayer1?.arimal?.arimalId}</Typography>
+                <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '150px', height: '150px', borderRadius: '100%' }} />
+                {arimal1?.idleGif != undefined ? 
+                  <img src={arimal1?.idleGif} alt='arimals' style={{ width: '150px', height: '150px' }} /> 
+                  :  
+                  <Typography variant='h6'>waiting...</Typography>}
               </Card>
             )}
           </Grid>
           <Grid item>
+             <Card style={{background: '#10002B', padding: '20px', width: 'auto', }}>
+                <Typography variant="h1" color="white">Vs.</Typography>
+              </Card>
+          </Grid>
+          <Grid item>
             {player2 && (
-              <Card style={{ backgroundColor: '#3C096C', padding: '20px', width: '300px' }}>
+              <Card style={{ backgroundColor: '#3C096C', padding: '35px', width: 'auto'}}>
                 <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
-                <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '150px', height: '150px' }} />
-                <Typography variant='h1'>{arimalsData?.arimalPlayer2?.arimal?.arimalId}</Typography>
+                <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '150px', height: '150px', borderRadius: '100%'}} />
+                {arimal2?.idleGif != undefined ? 
+                  <img src={arimal2?.idleGif} alt='arimals' style={{ width: '150px', height: '150px'}} /> 
+                  :  
+                  <Typography variant='h6'>waiting...</Typography>}
               </Card>
             )}
           </Grid>
@@ -190,7 +303,7 @@ const BattlePage = () => {
   if (phase === 'battle') {
     return (
       <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <Battle player1={player1} player2={player2} />
+        <Battle player1={player1} player2={player2} arimal1={arimal1} arimal2={arimal2} />
       </Container>
     );
   }

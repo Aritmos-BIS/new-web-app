@@ -2,51 +2,21 @@ import { Container, Typography, Card, LinearProgress, Grid } from '@mui/material
 import { useState, useEffect } from 'react';
 import { apiFetch } from '@/libs/request';
 
-const Batalla = ({player1, player2}) => {
+const Batalla = ({player1, player2, arimal1, arimal2}) => {
 
   let attackGif, damageGif, arimalName, idleGif;
 
   const [textInformation, setTextInformation] = useState('waiting');
   const [textGame, setTextGame] = useState('Esperando respuestas');
 
-  const [currentGif1, setCurrentGif1] = useState('');
-  const [attackGif1, setAttackGif1] = useState('');
-  const [damageGif1, setDamageGif1] = useState('');
-  const [idleGif1, setIdleGif1] = useState('');
-  const [arimal1, setArimal1] = useState('');
+  const [currentGif1, setCurrentGif1] = useState(arimal1.idleGif);
+
   const [arimal1Hp, setArimal1Hp] = useState(100) 
 
-  const [currentGif2, setCurrentGif2] = useState('');
-  const [attackGif2, setAttackGif2] = useState('');
-  const [damageGif2, setDamageGif2] = useState('');
-  const [idleGif2, setIdleGif2] = useState('');
-  const [arimal2, setArimal2] = useState('');
+  const [currentGif2, setCurrentGif2] = useState(arimal2.idleGif);
   const [arimal2Hp, setArimal2Hp] = useState(100)
 
   const [turn, setTurn] = useState(1)
-
-  const [arimalsData, setArimalsData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await apiFetch({ method: 'GET' }, '/api/battle/arimals');
-        setArimalsData(response); 
-      } catch (error) {
-        console.error('Error fetching arimals data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (arimalsData) {
-      getArimalImage(1, arimalsData.arimalPlayer1.arimal.arimalId)
-      getArimalImage(2, arimalsData.arimalPlayer2.arimal.arimalId)
-      }
-  }, [arimalsData]);
-
 
   const handleChangeTextInfo = () => {
     switch (textInformation) {
@@ -70,50 +40,6 @@ const Batalla = ({player1, player2}) => {
     }
   }
 
-  const getArimalImage = (player, id) => {  
-    switch (id) {
-      case 1:
-        attackGif = '/images/arimals/ariAttack.gif';
-        damageGif = '/images/arimals/ariDmg.gif';
-        arimalName = 'Ari';
-        idleGif = '/images/arimals/ariIdle.png';
-        break;
-      case 2:
-        attackGif = '/images/arimals/axoAttack.gif';
-        damageGif = '/images/arimals/axoDmg.gif';
-        arimalName = 'Axo';
-        idleGif = '/images/arimals/axoIdle.png';
-        break;
-      case 3:
-        attackGif = '/images/arimals/cactiAttack.gif';
-        damageGif = '/images/arimals/cactiDmg.gif';
-        arimalName = 'Cacti';
-        idleGif = '/images/arimals/cactiIdle.png';
-        break;
-      case 4:
-        attackGif = '/images/arimals/monarchAttack.gif';
-        damageGif = '/images/arimals/monarchDmg.gif';
-        arimalName = 'Monarch';
-        idleGif = '/images/arimals/monarchIdle.png';
-        break;
-      default:
-        return;
-    }
-  
-    if (player === 1) {
-      setAttackGif1(attackGif);
-      setDamageGif1(damageGif)
-      setIdleGif1(idleGif)
-      setArimal1(arimalName)
-      setCurrentGif1(idleGif)
-    } else if (player === 2) {
-      setAttackGif2(attackGif);
-      setDamageGif2(damageGif)
-      setIdleGif2(idleGif)
-      setArimal2(arimalName)
-      setCurrentGif2(idleGif)
-    }
-  };
 
   const checkAnswer = async (player) => {
     const answerData = apiFetch({ method: 'GET' }, '/api/battle/answer' )
@@ -177,10 +103,10 @@ const Batalla = ({player1, player2}) => {
       {/* Jugador 1 */}
       <Grid sx={{ width: '45%', display: 'flex', flexDirection: 'column' }}>
         <Grid sx={{ textAlign:'start', display:'flex', flexDirection:'row', justifyContent: 'start', alignItems:'center' }}>
-          <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '50px', height: '70px' }} />
+          <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '50px', height: '70px', borderRadius: '20px', margin: '10px' }} />
           <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
         </Grid>
-        <LinearProgress variant="determinate" value={arimal1Hp} style={{ marginTop: '10px', width: '100%' }} />
+        <LinearProgress variant="determinate" value={arimal1Hp} color={arimal1Hp <= 50 ? 'error' : 'secondary'}/>
         <Typography variant="h6" color="white" style={{ marginTop: '10px' }}></Typography>
         <img src={currentGif1} style={{ width: '150px', height: '150px', marginTop: '10px', marginInline:'auto', transform: 'scaleX(-1)' }} />
       </Grid>
@@ -188,9 +114,9 @@ const Batalla = ({player1, player2}) => {
       <Grid sx={{ width: '45%', display: 'flex', flexDirection: 'column' }}>
         <Grid sx={{ width: '100%', textAlign:'end', display:'flex', flexDirection:'row', justifyContent: 'end', alignItems:'center' }}>
           <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
-          <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '50px', height: '70px' }} />
+          <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '50px', height: '70px', borderRadius: '20px', margin: '10px' }} />
         </Grid>
-        <LinearProgress variant="determinate" value={arimal1Hp} style={{ marginTop: '10px', width: '100%' }} />
+        <LinearProgress variant="determinate" value={arimal2Hp} color={arimal1Hp <= 50 ? 'error' : 'secondary'}/>
         <Typography variant="h6" color="white" style={{ marginTop: '10px' }}></Typography>
         <img src={currentGif2} style={{ width: '150px', height: '150px', marginTop: '10px', marginInline:'auto' }} />
       </Grid>
