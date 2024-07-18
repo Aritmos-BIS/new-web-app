@@ -7,18 +7,26 @@ export const GET = async (req) => {
   await mongoConnection();
 
   const battles = await Battle.find();
+  
+  if (!battles.length) {
+    return NextResponse.json({ error: 'No battles found' }, { status: 404 });
+  }
+
   const battleId = battles.length - 1;
   const battle = battles[battleId];
+
+  if (!battle) {
+    return NextResponse.json({ error: 'Battle not found' }, { status: 404 });
+  }
 
   const { player1, player2 } = battle.toObject();
 
   try {
-
-    const answerPlayer1 = R.omit(['arimal'], player1)
-    const answerPlayer2 = R.omit(['arimal'], player2)
+    const answerPlayer1 = R.omit(['arimal'], player1);
+    const answerPlayer2 = R.omit(['arimal'], player2);
 
     if (!answerPlayer1 && !answerPlayer2) {
-      return NextResponse.json({ error: 'players not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Players not found' }, { status: 404 });
     }
 
     return NextResponse.json({ turn: battle.turn, answerPlayer1, answerPlayer2 }, { status: 200 });
@@ -27,23 +35,30 @@ export const GET = async (req) => {
     console.error('Error updating battle:', error);
     return NextResponse.json({ error: 'Failed to update battle' }, { status: 500 });
   }
-
-
-}
+};
 
 export const PUT = async (req) => {
   await mongoConnection();
     
   const battles = await Battle.find();
+
+  if (!battles.length) {
+    return NextResponse.json({ error: 'No battles found' }, { status: 404 });
+  }
+
   const battleId = battles.length - 1;
   const battle = battles[battleId];
+
+  if (!battle) {
+    return NextResponse.json({ error: 'Battle not found' }, { status: 404 });
+  }
 
   const { player1, player2, ...body } = battle.toObject();
 
   const data = await req.json();
-  const { playerId } = data
+  const { playerId } = data;
 
-  let updatedBody
+  let updatedBody;
   if (playerId == battle.player1.playerId) {
     const { arimal } = player1;
     updatedBody = { ...body, player1: { ...data, arimal }, player2 };
@@ -54,9 +69,7 @@ export const PUT = async (req) => {
     return NextResponse.json({ error: 'Player not found' }, { status: 404 });
   }
 
-
   try {
-    
     const updatedBattle = await Battle.findByIdAndUpdate(battle._id, updatedBody, { new: true });
 
     if (!updatedBattle) {
@@ -69,4 +82,4 @@ export const PUT = async (req) => {
     console.error('Error updating battle:', error);
     return NextResponse.json({ error: 'Failed to update battle' }, { status: 500 });
   }
-}
+};

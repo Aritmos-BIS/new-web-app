@@ -12,6 +12,7 @@ const ArimalSchema = new Schema({
 const PlayerSchema = new Schema({
   _id: false,
   playerId: {type: Number,  required: true},
+  name:{type: String, required: true},
   turn: {type: Number, required: true},
   correct: {type: Boolean, required: false},
   level: {type: String, required: false},
