@@ -8,160 +8,32 @@ import { LinearProgress } from '@mui/material';
 import { apiFetch } from '@/libs/request';
 import { useStore } from '@/libs/store';
 import { Container, Typography, ListItemText, Checkbox, Button, Card } from '@mui/material';
-import useFetchBattle from '@/hooks/useFetchBattle';
-
-let turn = 0;
 
 const BattlePage = () => {
-  const { battleData, error } = useFetchBattle();
   const { group } = useStore(state => state);
   const [selectedStudents, setSelectedStudents] = useState([]);
   
   const [phase, setPhase] = useState('groupSelection');
   const [countdown, setCountdown] = useState(3);
 
-  const [player1Lives, setPlayer1Lives] = useState(battleData.player1.arimal.hp);
-  const [player2Lives, setPlayer2Lives] = useState(battleData.player2.arimal.hp);
-
-  let player1LifeBarWidth = (player1Lives / 100) * 100;
-  let player2LifeBarWidth = (player2Lives / 100) * 100;
-
-  const handleCheckboxChange = (student, index) => {
-    const studentData = { id: student.id, name: student.name, urlImage: student.urlImage, index };
-    if (selectedStudents.some(s => s.id === student.id)) {
-      setSelectedStudents(selectedStudents.filter(s => s.id !== student.id));
-    } else if (selectedStudents.length < 2) {
-      setSelectedStudents([...selectedStudents, studentData]);
-    }
-  };
-
   const [textInformation, setTextInformation] = useState('waiting');
   const [textGame, setTextGame] = useState('Esperando respuestas');
 
-  const [currentGif1, setCurrentGif1] = useState(getArimalImageP1(battleData.player1.arimal.id));
-  const [currentGif2, setCurrentGif2] = useState(getArimalImageP2(battleData.player2.arimal.id));
+  const [currentGif1, setCurrentGif1] = useState('');
+  const [attackGif1, setAttackGif1] = useState('');
+  const [damageGif1, setDamageGif1] = useState('');
+  const [idleGif1, setIdleGif1] = useState('');
+  const [arimal1, setArimal1] = useState('');
+  const [arimal1Hp, setArimal1Hp] = useState(100) 
 
-  const attackGif1 = '';
-  const attackedGif1 = '';
-  const idleGif1 = '';
-  const Arimal1 = '';
-  const attackGif2 = '';
-  const attackedGif2 = '';
-  const idleGif2 = '';
-  const Arimal2 = '';
+  const [currentGif2, setCurrentGif2] = useState('');
+  const [attackGif2, setAttackGif2] = useState('');
+  const [damageGif2, setDamageGif2] = useState('');
+  const [idleGif2, setIdleGif2] = useState('');
+  const [arimal2, setArimal2] = useState('');
+  const [arimal2Hp, setArimal2Hp] = useState(100)
 
-  switch (textGame) {
-    case 'waiting':
-      setTextGame('Esperando a que los jugadores contesten la pregunta');
-      break;
-    case 'p1Attack':
-      setTextGame(Arimal1 + ' ataco a ' + Arimal2);
-      break;
-    case 'p2Attack':
-      setTextGame(Arimal2 + ' ataco a ' + Arimal1);
-      break;
-    case 'p1Missed':
-      setTextGame(Arimal1 + ' fallo el ataque a ' + Arimal2);
-      break;
-    case 'p2Missed':
-      setTextGame(Arimal2 + ' fallo el ataque a ' + Arimal1);
-      break;
-    default:
-      break;
-  }
-  
-
-
-  const getArimalImageP1 = (id) => {
-    switch (id) {
-      case 1:
-        correctGif1 = '/images/arimals/ariAttack.gif';
-        incorrectGif1 = '/images/arimals/ariDmg.gif';
-        Arimal1 = 'Ari';
-        return idleGif1 = '/images/arimals/ariIdle.png';
-      case 2:
-        correctGif1 = '/images/arimals/axoAttack.gif';
-        incorrectGif1 = '/images/arimals/axoDmg.gif';
-        Arimal1 = 'Axo';
-        return idleGif1 = '/images/arimals/axoIdle.png';
-      case 3:
-        correctGif1 = '/images/arimals/cactiAttack.gif';
-        incorrectGif1 = '/images/arimals/cactiDmg.gif';
-        Arimal1 = 'Cacti';
-        return idleGif1 = '/images/arimals/cactiIdle.png';
-      case 4:
-        correctGif1 = '/images/arimals/monarchAttack.gif';
-        incorrectGif1 = '/images/arimals/monarchDmg.gif';
-        Arimal1 = 'Monarch';
-        return idleGif1 = '/images/arimals/monarchIdle.png';
-      default:
-    }
-  };
-
-  const getArimalImageP2 = (id) => {
-    switch (id) {
-      case 1:
-        correctGif2 = '/images/arimals/ariAttack.gif';
-        incorrectGif2 = '/images/arimals/ariDmg.gif';
-        Arimal2 = 'Ari';
-        return idleGif2 = '/images/arimals/ariIdle.png';
-      case 2:
-        correctGif2 = '/images/arimals/axoAttack.gif';
-        incorrectGif2 = '/images/arimals/axoDmg.gif';
-        Arimal2 = 'Axo';
-        return idleGif2 = '/images/arimals/axoIdle.png';
-      case 3:
-        correctGif2 = '/images/arimals/cactiAttack.gif';
-        incorrectGif2 = '/images/arimals/cactiDmg.gif';
-        Arimal2 = 'Cacti';
-        return idleGif2 = '/images/arimals/cactiIdle.png';
-      case 4:
-        correctGif2 = '/images/arimals/monarchAttack.gif';
-        incorrectGif2 = '/images/arimals/monarchDmg.gif';
-        Arimal2 = 'Monarch';
-        return idleGif2 = '/images/arimals/monarchIdle.png';
-      default:
-    }
-  };
-
-  const payload = {
-    turn: turn,
-    player1: {
-      playerId: selectedStudents[0]?.id,
-      turn: 0,
-    },
-    player2: {
-      playerId: selectedStudents[1]?.id,
-      turn: 0,
-    }
-  };
-
-  const handleSaveSelection = async () => {
-    console.log("Payload to send:", payload);
-    try {
-      const response = await fetch('/api/battle', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const textResponse = await response.text();
-      console.log("Raw response:", textResponse);
-
-      if (!response.ok) {
-        throw new Error(`Failed to save selection: ${textResponse}`);
-      }
-
-      const result = JSON.parse(textResponse);
-      console.log("Parsed response:", result);
-      setPhase('initial');
-    } catch (error) {
-      console.error('Error saving selection:', error);
-      setPhase('initial');
-    }
-  };
+  const [turn, setTurn] = useState(0)
 
   useEffect(() => {
     if (phase === 'countdown') {
@@ -178,64 +50,146 @@ const BattlePage = () => {
     }
   }, [phase]);
 
-  const checkAnswer = () => {
-    const isCorrect1 = (battleData.player1.correct);
-    const isCorrect2 = (battleData.player2.correct);
+  const handleCheckboxChange = (student, index) => {
+    const studentData = { id: student.id, name: student.name, urlImage: student.urlImage, index };
+    if (selectedStudents.some(s => s.id === student.id)) {
+      setSelectedStudents(selectedStudents.filter(s => s.id !== student.id));
+    } else if (selectedStudents.length < 2) {
+      setSelectedStudents([...selectedStudents, studentData]);
+    }
+  };
 
-    let attack = 0;
+  
 
-    let level1 = (battleData.player1.level);
-    let level2 = (battleData.player2.level);
+  const handleChangeTextInfo = () => {
+    switch (textInformation) {
+      case 'waiting':
+        setTextGame('Esperando a que los jugadores contesten la pregunta');
+        break;
+      case 'p1Attack':
+        setTextGame(arimal1 + ' ataco a ' + arimal2);
+        break;
+      case 'p2Attack':
+        setTextGame(arimal2 + ' ataco a ' + arimal1);
+        break;
+      case 'p1Missed':
+        setTextGame(arimal1 + ' fallo el ataque a ' + arimal2);
+        break;
+      case 'p2Missed':
+        setTextGame(arimal2 + ' fallo el ataque a ' + arimal1);
+        break;
+      default:
+        break;
+    }
+  }
 
-    if(level1 == 'hard'){
+  const getArimalImage = (player, id) => {
+    let attackGif, damageGif, arimal, idleGif;
+  
+    switch (id) {
+      case 1:
+        attackGif = '/images/arimals/ariAttack.gif';
+        damageGif = '/images/arimals/ariDmg.gif';
+        arimal = 'Ari';
+        idleGif = '/images/arimals/ariIdle.png';
+        break;
+      case 2:
+        attackGif = '/images/arimals/axoAttack.gif';
+        damageGif = '/images/arimals/axoDmg.gif';
+        arimal = 'Axo';
+        idleGif = '/images/arimals/axoIdle.png';
+        break;
+      case 3:
+        attackGif = '/images/arimals/cactiAttack.gif';
+        damageGif = '/images/arimals/cactiDmg.gif';
+        arimal = 'Cacti';
+        idleGif = '/images/arimals/cactiIdle.png';
+        break;
+      case 4:
+        attackGif = '/images/arimals/monarchAttack.gif';
+        damageGif = '/images/arimals/monarchDmg.gif';
+        arimal = 'Monarch';
+        idleGif = '/images/arimals/monarchIdle.png';
+        break;
+      default:
+        return;
+    }
+  
+    if (player === 1) {
+      setAttackGif1(attackGif);
+      setDamageGif1(damageGif)
+      setIdleGif1(idleGif)
+      setArimal1(arimal)
+    } else if (player === 2) {
+      setAttackGif2(attackGif);
+      setDamageGif2(damageGif)
+      setIdleGif2(idleGif)
+      setArimal2(arimal)
+    }
+  };
+
+  const handleSaveSelection = async () => {
+    const payload = {
+      _id: 1,
+      turn: 0,
+      player1: {
+        playerId: selectedStudents[0]?.id,
+        name: selectedStudents[1]?.name, 
+        turn: 0,
+      },
+      player2: {
+        playerId: selectedStudents[1]?.id,
+        name: selectedStudents[1]?.name,
+        turn: 0,
+      }
+    };
+    
+    console.log({payload})
+
+    try {
+      await apiFetch({payload, method:'POST'}, '/api/battle')
+      setPhase('initial');
+    } catch (error) {
+      console.error('Error saving selection:', error);
+      setPhase('initial');
+    }
+  };
+
+
+  const checkAnswer = async (player) => {
+    const answerData = apiFetch({ method: 'GET' }, '/api/battle/answer' )
+    const isCorrect = (player == 1 ? answerData.answerPlayer1.correct : answerData.answerPlayer2.correct);
+    const level = (player == 1 ? answerData.answerPlayer1.level : answerData.answerPlayer2.level);
+
+    if(level == 'hard'){
       attack = 30
-    }else if(level1 == 'medium'){
+    }else if(level == 'medium'){
       attack = 20
-    }else if(level1 == 'easy'){
+    }else if(level == 'easy'){
       attack = 10
     }
 
-    if(level2 == 'hard'){
-      attack = 30
-    }else if(level2 == 'medium'){
-      attack = 20
-    }else if(level2 == 'easy'){
-      attack = 10
-    }
-
-    if (isCorrect1) {
-      setPlayer2Lives(player2Lives => {
-        player2Lives = player2Lives - attack;
-        if (player2Lives <= 0) {
-          setPhase('winner');
-        }
-        return player2Lives;
-      });
-      setCurrentGif1(attackGif1);
-      setCurrentGif2(attackedGif2);
-      lifeUpdateP2();
-      setTextInformation('p1Attack');
-      setTimeout(() => {
-      }, 3000);
-    } else {
-      setTextInformation('p1Missed');
-      setTimeout(() => {
-      }, 3000);
-    }
-    setCurrentGif1(idleGif1);
-    
-    
-      if (isCorrect2) {
-        setPlayer1Lives(player1Lives => {
-          player1Lives = player1Lives - attack;
-          if (player1Lives <= 0) {
-            setPhase('winner');
-          }
-          return player1Lives;
-        });
+    if (player == 1) {
+      if(isCorrect){
+        setArimal2Hp(arimal2Hp - attack)
+        setCurrentGif1(attackGif1);
+        setCurrentGif2(damageGif2);
+        await apiFetch({ payload: { _id: selectedStudents[1]?.id, hp: arimal2Hp }, method: "GET" })
+        setTextInformation('p1Attack');
+        setTimeout(() => {
+        }, 3000);
+      } else {
+        setTextInformation('p1Missed');
+        setTimeout(() => {
+        }, 3000);
+      }
+      setCurrentGif1(idleGif1);
+    }else{
+      if(isCorrect){
+        setArimal1Hp(arimal1Hp - attack)
         setCurrentGif2(attackGif2);
-        setCurrentGif1(attackedGif1);
-        lifeUpdateP1();
+        setCurrentGif1(damageGif1);
+        await apiFetch({ payload: { _id: selectedStudents[0]?.id, hp: arimal1Hp }, method: "GET" })
         setTextInformation('p2Attack');
         setTimeout(() => {
         }, 3000);
@@ -245,65 +199,10 @@ const BattlePage = () => {
         }, 3000);
       }
       setCurrentGif2(idleGif2);
-    
     }
+  }
     
-  const lifeUpdateP1 = async () => {
-    try {
-      const response = await apiFetch('/api/battle/arimals', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body:{
-          player1:{
-            Arimal:{
-              Id: battleData.player1.Arimal.id,
-              Hp: player1Lives,
-              Attack: attack,
-              Type: ''
-          }
-        }
-        }})
-        if (!response.ok) {
-          throw new Error(`Failed to update battle: ${textResponse}`);
-        }
-  
-        const result = JSON.parse(textResponse);
-        console.log("Parsed response:", result);
-      } catch (error) {
-        console.error('Error updating battle:', error);
-      }
-    };
-
-    const lifeUpdateP2 = async () => {
-      try {
-        const response = await apiFetch('/api/battle/arimals', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body:{
-            player2:{
-              Arimal:{
-                Id: battleData.player2.Arimal.id,
-                Hp: player2Lives,
-                Attack: attack,
-                Type: ''
-            }
-          }
-          }})
-          if (!response.ok) {
-            throw new Error(`Failed to update battle: ${textResponse}`);
-          }
     
-          const result = JSON.parse(textResponse);
-          console.log("Parsed response:", result);
-        } catch (error) {
-          console.error('Error updating battle:', error);
-        }
-      };
-    }
 
   useEffect(() => {
     if (phase === 'battle') {
@@ -318,29 +217,24 @@ const BattlePage = () => {
 
   const startBattle = async () => {
     try {
-      const response = await apiFetch('/api/battle', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: {
-          turn: turn + 1 
-          }
-        })
-        if (!response.ok) {
-          throw new Error(`Failed to update battle: ${textResponse}`);
-        }
-  
-        const result = JSON.parse(textResponse);
-        console.log("Parsed response:", result);
+        await apiFetch({payload: { turn: turn + 1 }, method: "PUT"}, '/api/battle/turn') 
+        const response = await apiFetch({method: "GET"}, '/api/battle/arimals') 
+
+        getArimalImage(1, response.arimalPlayer1.arimal1)
+        getArimalImage(2, response.arimalPlayer2.arimal1)
+   
       } catch (error) {
         console.error('Error updating battle:', error);
       }
     };
 
-      const handleBattlePhase = () => {
-        startBattle();
-        setPhase('countdown');
+      const handleBattlePhase = async () => {
+        startBattle()
+        
+        if (arimal1 != '' && arimal2 != '') {
+          setPhase('countdown');
+        }
+
       };
 
 
@@ -450,7 +344,7 @@ const BattlePage = () => {
               <Card style={{ backgroundColor: '#3C096C', padding: '20px', width: '300px' }}>
                 <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
                 <img src={currentGif1} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '150px', height: '150px' }} />
-                <LinearProgress variant="determinate" value={player1LifeBarWidth} />
+                <LinearProgress variant="determinate" value={arimal1Hp} />
               </Card>
             )}
           </Grid>
@@ -459,7 +353,7 @@ const BattlePage = () => {
               <Card style={{ backgroundColor: '#3C096C', padding: '20px', width: '300px' }}>
                 <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
                 <img src={currentGif2} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '150px', height: '150px' }} />
-                <LinearProgress variant="determinate" value={player2LifeBarWidth} />
+                <LinearProgress variant="determinate" value={arimal2Hp} />
               </Card>
             )}
           </Grid>
