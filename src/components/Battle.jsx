@@ -173,28 +173,34 @@ const Batalla = ({player1, player2}) => {
   return (
     <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
     <Typography variant="h4" color="white" gutterBottom>¡Batalla!</Typography>
-    <Grid container spacing={2} justifyContent="center">
-      <Grid item>
-          <Card style={{ backgroundColor: '#3C096C', padding: '20px', width: '300px' }}>
-            <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
-            <img src={currentGif1} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '150px', height: '150px' }} />
-            <LinearProgress variant="determinate" value={arimal1Hp} />
-          </Card>
+    <Card style={{ backgroundColor: '#3C096C', padding: '20px', width: '80%', display: 'flex', justifyContent: 'space-between' }}>
+      {/* Jugador 1 */}
+      <Grid sx={{ width: '45%', display: 'flex', flexDirection: 'column' }}>
+        <Grid sx={{ textAlign:'start', display:'flex', flexDirection:'row', justifyContent: 'start', alignItems:'center' }}>
+          <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '50px', height: '70px' }} />
+          <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
+        </Grid>
+        <LinearProgress variant="determinate" value={arimal1Hp} style={{ marginTop: '10px', width: '100%' }} />
+        <Typography variant="h6" color="white" style={{ marginTop: '10px' }}></Typography>
+        <img src={currentGif1} style={{ width: '150px', height: '150px', marginTop: '10px', marginInline:'auto', transform: 'scaleX(-1)' }} />
       </Grid>
-      <Grid item>
-          <Card style={{ backgroundColor: '#3C096C', padding: '20px', width: '300px' }}>
-            <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
-            <img src={currentGif2} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '150px', height: '150px' }} />
-             <LinearProgress variant="determinate" value={arimal2Hp} />
-          </Card>
+      {/* Jugador 2 */}
+      <Grid sx={{ width: '45%', display: 'flex', flexDirection: 'column' }}>
+        <Grid sx={{ width: '100%', textAlign:'end', display:'flex', flexDirection:'row', justifyContent: 'end', alignItems:'center' }}>
+          <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
+          <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '50px', height: '70px' }} />
+        </Grid>
+        <LinearProgress variant="determinate" value={arimal1Hp} style={{ marginTop: '10px', width: '100%' }} />
+        <Typography variant="h6" color="white" style={{ marginTop: '10px' }}></Typography>
+        <img src={currentGif2} style={{ width: '150px', height: '150px', marginTop: '10px', marginInline:'auto' }} />
       </Grid>
-      <Grid container justifyContent="center" alignItems="center">
-      <Container sx={{backgroundColor: 'white', height: '25vh', width: '70%', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center'}}>
+    </Card>
+    <Grid container justifyContent="center" alignItems="center" style={{ marginTop: '20px' }}>
+      <Container sx={{ backgroundColor: 'white', height: '25vh', width: '70%', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
         <Typography variant="h4" sx={{ color: 'black' }}>
           {textGame}
         </Typography>
       </Container>
-    </Grid>
     </Grid>
   </Container>
   )
