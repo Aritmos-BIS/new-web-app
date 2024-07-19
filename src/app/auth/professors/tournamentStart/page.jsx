@@ -251,13 +251,20 @@ const BattlePage = () => {
         <Grid container spacing={2} justifyContent="center" alignItems="center">
           <Grid item>
             {player1 && (
-              <Card style={{ backgroundColor: '#3C096C', padding: '35px', width: 'auto' }}>
+              <Card style={{ backgroundColor: '#3C096C', display:'flex', flexDirection:'column', textAlign:'center', padding: '35px', width: 'auto' }}>
                 <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
-                <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '150px', height: '150px', borderRadius: '100%' }} />
-                {arimal1?.idleGif != undefined ? 
-                  <img src={arimal1?.idleGif} alt='arimals' style={{ width: '150px', height: '150px' }} /> 
-                  :  
-                  <Typography variant='h6'>waiting...</Typography>}
+                <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ margin: '10px', width: '150px', height: '150px', borderRadius: '100%' }} />
+                {arimal1?.idleGif !== undefined ? (
+                  <>
+                    <Typography variant="h6" color="white" textAlign='center'>{arimal1.arimalName}</Typography>
+                    <img src={arimal1.idleGif} alt="arimals" style={{ width: '150px', height: '150px' }} />
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h6"></Typography>
+                    <Typography color="white" variant="h6">waiting...</Typography>
+                  </>
+                )}
               </Card>
             )}
           </Grid>
@@ -268,13 +275,20 @@ const BattlePage = () => {
           </Grid>
           <Grid item>
             {player2 && (
-              <Card style={{ backgroundColor: '#3C096C', padding: '35px', width: 'auto'}}>
+              <Card style={{ backgroundColor: '#3C096C', display:'flex', flexDirection:'column', textAlign:'center', padding: '35px', width: 'auto'}}>
                 <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
-                <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '150px', height: '150px', borderRadius: '100%'}} />
-                {arimal2?.idleGif != undefined ? 
-                  <img src={arimal2?.idleGif} alt='arimals' style={{ width: '150px', height: '150px'}} /> 
-                  :  
-                  <Typography variant='h6'>waiting...</Typography>}
+                <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ margin: '10px', width: '150px', height: '150px', borderRadius: '100%'}} />
+                {arimal2?.idleGif !== undefined ? (
+                  <>
+                    <Typography variant="h6" textAlign='center'>{arimal2.arimalName}</Typography>
+                    <img src={arimal2.idleGif} alt="arimals" style={{ width: '150px', height: '150px' }} />
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h6"></Typography>
+                    <Typography variant="h6">waiting...</Typography>
+                  </>
+                )}
               </Card>
             )}
           </Grid>
@@ -315,7 +329,7 @@ const BattlePage = () => {
       <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <Typography variant="h4" color="white" gutterBottom>¡Ganador!</Typography>
         <Typography variant="h6" color="white" gutterBottom>
-          {player1Lives > player2Lives ? `${player1.firstName} ${player1.lastName}` : `${player2.firstName} ${player2.lastName}`}
+          {player1Lives <= 0 ? `${player2.firstName} ${player2.lastName}` : `${player1.firstName} ${player1.lastName}`}
         </Typography>
         <Button
           onClick={() => setPhase('groupSelection')}
