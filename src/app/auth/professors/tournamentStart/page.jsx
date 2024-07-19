@@ -295,6 +295,7 @@ const BattlePage = () => {
         </Grid>
         <Button
           onClick={handleBattlePhase}
+          disabled={!arimal1?.idleGif && !arimal2?.idleGif}
           style={{
             marginTop: '20px',
             backgroundColor: '#E0AAFF',
