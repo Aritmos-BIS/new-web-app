@@ -55,7 +55,7 @@ const ProfilePage = () => {
                     <Button
                       variant="contained"
                       color="primary"
-                      sx={{ width: '100%' }}
+                      sx={{m:2 , width: '70%' }}
                     >
                       Alumnos de tu grupo
                     </Button>
@@ -66,7 +66,7 @@ const ProfilePage = () => {
                 <Button
                   variant="contained"
                   color="secondary"
-                  sx={{ mb: 2, width: '100%' }}
+                  sx={{ width: '70%' }}
                 >
                   Edita tu perfil
                 </Button>

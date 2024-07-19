@@ -118,7 +118,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
         </Grid>
         <LinearProgress variant="determinate" value={arimal1Hp} color={arimal1Hp <= 50 ? 'error' : 'secondary'}/>
-        <Typography variant="h6" color="white" style={{ marginTop: '10px' }}></Typography>
+        <Typography variant="h6" color="white" style={{ marginTop: '10px' }}>{arimal1.arimalName}</Typography>
         <img src={currentGif1} style={{ width: '200px', height: '200px', marginTop: '10px', marginInline:'auto', transform: 'scaleX(-1)' }} />
       </Grid>
       {/* Jugador 2 */}
@@ -127,11 +127,12 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
           <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '30px', height: '50px', borderRadius: '20px', margin: '10px' }} />
         </Grid>
-        <LinearProgress variant="determinate" value={arimal2Hp} color={arimal1Hp <= 50 ? 'error' : 'secondary'}/>
-        <Typography variant="h6" color="white" style={{ marginTop: '10px' }}></Typography>
+        <LinearProgress variant="determinate" sx={{transform: 'scaleX(-1)' }} value={arimal2Hp} color={arimal1Hp <= 50 ? 'error' : 'secondary'}/>
+        <Typography variant="h6" color="white" style={{ marginTop: '10px', textAlign:'end' }}>{arimal2.arimalName}</Typography>
         <img src={currentGif2} style={{ width: '200px', height: '200px', marginTop: '10px', marginInline:'auto' }} />
       </Grid>
     </Card>
+    {/* Informacion */}
     <Grid container justifyContent="center" alignItems="center" style={{ marginTop: '20px' }}>
       <Container sx={{ backgroundColor: 'white', height: '20vh', width: '70%', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', borderRadius: '20px' }}>
         <Typography variant="h5" sx={{ color: 'black' }}>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Grid from '@mui/material/Grid';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
@@ -9,8 +10,11 @@ import { apiFetch } from '@/libs/request';
 import { useStore } from '@/libs/store';
 import { Container, Typography, ListItemText, Checkbox, Button, Card } from '@mui/material';
 import Battle from '@/components/Battle.jsx'
+import { styled } from '@mui/system';
 
 const BattlePage = () => {
+  const router = useRouter();
+
   const { group } = useStore(state => state);
   const [selectedStudents, setSelectedStudents] = useState([]);
   
@@ -21,7 +25,6 @@ const BattlePage = () => {
   const [arimal1, setArimal1] = useState(null);
   const [image2, setImage2] = useState('');
   const [arimal2, setArimal2] = useState(null);
-  const [arimalsData, setArimalsData] = useState(null);
 
   const [turn, setTurn] = useState(0)
 
@@ -38,7 +41,7 @@ const BattlePage = () => {
         setCountdown((prevCountdown) => {
           if (prevCountdown === 1) {
             clearInterval(timer);
-            setPhase('battle');
+            setPhase('winner');
           }
           return prevCountdown - 1;
         });
@@ -203,6 +206,121 @@ const BattlePage = () => {
     profileImage: group.students[selectedStudents[1]?.index].urlImage || '/images/user-image.png',
   } : null;
 
+  const FireworkBackground = styled('div')(({ fireworks }) => ({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -2,
+    overflow: 'hidden',
+    '& .firework': {
+      position: 'absolute',
+      width: '0.5vmin',
+      height: '0.5vmin',
+      content: '""',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      background: 'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 50% 00%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 00% 50%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 50% 99%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 99% 50%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 90%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 95% 90%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 10% 60%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 31% 80%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 10%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 90% 23%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 45% 20%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 13% 24%',
+      backgroundSize: '0.5vmin 0.5vmin',
+      backgroundRepeat: 'no-repeat',
+      animation: 'firework 2s infinite',
+      transformOrigin: 'center',
+      ...(fireworks.map((firework, index) => ({
+        [`& .firework:nth-of-type(${index + 1})`]: {
+          top: firework.top,
+          left: firework.left,
+          animationDuration: firework.animationDuration,
+          animationDelay: firework.animationDelay,
+        },
+      })))
+    },
+    '& .firework::before': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      width: '0.5vmin',
+      height: '0.5vmin',
+      background: 'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 50% 00%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 00% 50%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 50% 99%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 99% 50%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 90%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 95% 90%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 10% 60%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 31% 80%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 10%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 90% 23%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 45% 20%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 13% 24%',
+      backgroundSize: '0.5vmin 0.5vmin',
+      backgroundRepeat: 'no-repeat',
+      animation: 'firework 2s infinite',
+      transform: 'translate(-50%, -50%) rotate(25deg) !important',
+    },
+    '& .firework::after': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      width: '0.5vmin',
+      height: '0.5vmin',
+      background: 'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 50% 00%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 00% 50%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 50% 99%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 99% 50%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 90%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 95% 90%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 10% 60%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 31% 80%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 10%, ' +
+                  'radial-gradient(circle, #ff0 0.2vmin, #0000 0) 90% 23%, ' +
+                  'radial-gradient(circle, #ff0 0.3vmin, #0000 0) 45% 20%, ' +
+                  'radial-gradient(circle, #ff0 0.5vmin, #0000 0) 13% 24%',
+      backgroundSize: '0.5vmin 0.5vmin',
+      backgroundRepeat: 'no-repeat',
+      animation: 'firework 2s infinite',
+      transform: 'translate(-50%, -50%) rotate(-37deg) !important',
+    },
+    '@keyframes firework': {
+      '0%': {
+        transform: 'translate(-50%, 60vh)',
+        width: '0.5vmin',
+        opacity: '1',
+      },
+      '50%': {
+        width: '0.5vmin',
+        opacity: '1',
+      },
+      '100%': {
+        width: '45vmin',
+        opacity: '0',
+      },
+    },
+  }));
+  
+  const generateRandomFireworks = (count) => {
+    return [...Array(count)].map(() => ({
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      animationDuration: `${Math.random() * 2 + 1}s`,
+      animationDelay: `${Math.random() * 2}s`,
+    }));
+  };
+
 
   if (phase === 'groupSelection') {
     return (
@@ -213,7 +331,8 @@ const BattlePage = () => {
             {group.students.map((student, index) => (
               <Card key={student.id} style={{ backgroundColor: '#3C096C', margin: '10px', padding: '20px', width: '200px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
                 <ListItemText primary={`${student.name} ${student.lastname}`} style={{ color: '#E0AAFF', textAlign: 'center', marginBottom: '10px' }} />
-                <img src={student.urlImage || '/images/user-image.png'} alt={`${student.name} ${student.lastname}`} style={{ width: '100px', height: '100px', borderRadius: '5%', margin: '0 auto 10px auto', display: 'block' }} />                <Checkbox
+                <img src={student.urlImage || '/images/user-image.png'} alt={`${student.name} ${student.lastname}`} style={{ width: '100px', height: '100px', borderRadius: '5%', margin: '0 auto 10px auto', display: 'block' }} />
+                <Checkbox
                   checked={selectedStudents.some(s => s.id === student.id)}
                   onChange={() => handleCheckboxChange(student, index)}
                   style={{ alignSelf: 'center', color: '#E0AAFF' }}
@@ -280,7 +399,7 @@ const BattlePage = () => {
                 <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ margin: '10px', width: '150px', height: '150px', borderRadius: '100%'}} />
                 {arimal2?.idleGif !== undefined ? (
                   <>
-                    <Typography variant="h6" textAlign='center'>{arimal2.arimalName}</Typography>
+                    <Typography variant="h6" color="white" textAlign='center'>{arimal2.arimalName}</Typography>
                     <img src={arimal2.idleGif} alt="arimals" style={{ width: '150px', height: '150px' }} />
                   </>
                 ) : (
@@ -292,7 +411,7 @@ const BattlePage = () => {
               </Card>
             )}
           </Grid>
-        </Grid>
+        </Grid> 
         <Button
           onClick={handleBattlePhase}
           disabled={!arimal1?.idleGif && !arimal2?.idleGif}
@@ -311,9 +430,17 @@ const BattlePage = () => {
 
   if (phase === 'countdown') {
     return (
-      <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <Typography variant="h2" color="white" gutterBottom>{countdown}</Typography>
-      </Container>
+      <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+      <Typography variant="h2" style={{ fontSize: '5rem', animation: 'fadeIn 1s ease-in-out' }}>
+        {countdown}
+      </Typography>
+      <style jsx global>{`
+        @keyframes fadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+      `}</style>
+    </Container>
     );
   }
 
@@ -326,24 +453,80 @@ const BattlePage = () => {
   }
 
   if (phase === 'winner') {
+    const fireworks = generateRandomFireworks(10);
+    const handleClickRestart = async () => {
+      try {
+        await apiFetch( { method: 'DELETE' }, '/api/battle');
+        console.log('si borre')
+        //router.push();
+      } catch (error) {
+        console.error('There was a problem with the delete operation:', error);
+      }
+    };
     return (
-      <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <Typography variant="h4" color="white" gutterBottom>¡Ganador!</Typography>
-        <Typography variant="h6" color="white" gutterBottom>
-          {player1Lives <= 0 ? `${player2.firstName} ${player2.lastName}` : `${player1.firstName} ${player1.lastName}`}
-        </Typography>
-        <Button
-          onClick={() => setPhase('groupSelection')}
-          style={{
-            marginTop: '20px',
-            backgroundColor: '#E0AAFF',
-            color: 'white',
-            alignSelf: 'center'
-          }}
-        >
-          Jugar de Nuevo
-        </Button>
-      </Container>
+      <Container
+      style={{
+        minHeight: '90vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <FireworkBackground fireworks={fireworks}>
+        {fireworks.map((style, index) => (
+          <div
+            key={index}
+            className="firework"
+            style={{
+              top: style.top,
+              left: style.left,
+              animationDuration: style.animationDuration,
+              animationDelay: style.animationDelay,
+            }}
+          />
+        ))}
+      </FireworkBackground>
+      <Typography variant="h4" style={{ color: 'white', marginBottom: '16px', zIndex: 1 }}>
+        ¡Ganador de la batalla!
+      </Typography>
+      <Typography variant="h6" style={{ color: 'white', marginBottom: '16px', zIndex: 1 }}>
+        {10 <= 0 ? `${player2.firstName} ${player2.lastName}` : `${player1.firstName} ${player1.lastName}`}
+      </Typography>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          width: '220px',
+          height: '260px',
+          backgroundColor: '#C77DFF',
+          borderRadius: '10px',
+          overflow: 'hidden',
+          animation: 'growUp 1s ease-in-out',
+          zIndex: 1,
+        }}
+      >
+        <img
+          src={10 <= 0 ? (player2.profileImage || '/images/user-image.png') : (player1.profileImage || '/images/user-image.png')}
+          style={{ width: '200px', height: '250px', borderRadius: '5%', display: 'block' }}
+        />
+      </div>
+      <Button
+        onClick={(handleClickRestart)}
+        style={{
+          marginTop: '20px',
+          backgroundColor: '#7B2CBF',
+          color: 'white',
+          alignSelf: 'center',
+          zIndex: 1,
+        }}
+      >
+        Jugar de Nuevo
+      </Button>
+    </Container>
     );
   }
 
