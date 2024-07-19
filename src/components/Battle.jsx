@@ -4,19 +4,22 @@ import { apiFetch } from '@/libs/request';
 
 const Batalla = ({player1, player2, arimal1, arimal2}) => {
 
-  let attackGif, damageGif, arimalName, idleGif;
-
   const [textInformation, setTextInformation] = useState('waiting');
   const [textGame, setTextGame] = useState('Esperando respuestas');
 
   const [currentGif1, setCurrentGif1] = useState(arimal1.idleGif);
-
   const [arimal1Hp, setArimal1Hp] = useState(100) 
 
   const [currentGif2, setCurrentGif2] = useState(arimal2.idleGif);
   const [arimal2Hp, setArimal2Hp] = useState(100)
 
+  const [attack, setAttack] = useState(0)
+
   const [turn, setTurn] = useState(1)
+
+  useEffect(() => {
+    checkAnswer();
+  },  [turn])
 
   const handleChangeTextInfo = () => {
     switch (textInformation) {
@@ -41,51 +44,67 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   }
 
 
-  const checkAnswer = async (player) => {
+
+  const checkAnswer = async () => {
     const answerData = apiFetch({ method: 'GET' }, '/api/battle/answer' )
 
-    const isCorrect = (player == 1 ? answerData.answerPlayer1.correct : answerData.answerPlayer2.correct);
-    const level = (player == 1 ? answerData.answerPlayer1.level : answerData.answerPlayer2.level);
+    if (answerData.turn == answerData?.answerPlayer1?.turn) {
+      console.log('p1')
+      if(answerData?.answerPlayer1?.level == 'hard'){
+        setAttack(30)
+      }else if(answerData?.answerPlayer1?.level == 'medium'){
+        setAttack(20)
+      }else if(answerData?.answerPlayer1?.level == 'easy'){
+        setAttack(10)
+      }
 
-    if(level == 'hard'){
-      attack = 30
-    }else if(level == 'medium'){
-      attack = 20
-    }else if(level == 'easy'){
-      attack = 10
-    }
-
-    if (player == 1) {
-      if(isCorrect){
+      if(answerData?.answerPlayer1?.isCorrect){
         setArimal2Hp(arimal2Hp - attack)
-        setCurrentGif1(attackGif1);
-        setCurrentGif2(damageGif2);
-        await apiFetch({ payload: { _id: selectedStudents[1]?.id, hp: arimal2Hp }, method: "PUT" })
-        setTextInformation('p1Attack');
+        setCurrentGif1(arimal1.attackGif);
+        setCurrentGif2(arimal2.damageGif);
+        await apiFetch({ payload: { _id: answerData?.answerPlayer1?.playerId, hp: arimal2Hp }, method: "PUT" }) 
         setTimeout(() => {
         }, 5000);
       } else {
         setTextInformation('p1Missed');
         setTimeout(() => {
-        }, 3000);
+        }, 5000);
+        setCurrentGif1(arimal1.idleGif);
+        setCurrentGif2(arimal2.idleGif);
+        setTurn(turn + 1)
       }
-      setCurrentGif1(idleGif1);
-    }else{
-      if(isCorrect){
+      
+    }else if(answerData.turn == answerData?.answerPlayer2?.turn){
+      console.log('p2')
+      if(answerData?.answerPlayer2?.level == 'hard'){
+        setAttack(30)
+      }else if(answerData?.answerPlayer1?.level == 'medium'){
+        setAttack(20)
+      }else if(answerData?.answerPlayer1?.level == 'easy'){
+        setAttack(10)
+      }
+
+      if(answerData?.answerPlayer2?.isCorrect){
         setArimal1Hp(arimal1Hp - attack)
-        setCurrentGif2(attackGif2);
-        setCurrentGif1(damageGif1);
-        await apiFetch({ payload: { _id: selectedStudents[0]?.id, hp: arimal1Hp }, method: "PUT" }) 
-        setTextInformation('p2Attack');
+        setCurrentGif2(arimal2.attackGif);
+        setCurrentGif1(arimal1.damageGif);
+        await apiFetch({ payload: { _id: answerData?.answerPlayer2?.playerId, hp: arimal2Hp }, method: "PUT" }) 
         setTimeout(() => {
         }, 5000);
       } else {
-        setTextInformation('p2Missed');
+        setTextInformation('p1Missed');
         setTimeout(() => {
-        }, 3000);
+        }, 5000);
+        setCurrentGif1(arimal1.idleGif);
+        setCurrentGif2(arimal2.idleGif);
+        setTurn(turn + 1)
       }
-      setCurrentGif2(idleGif2);
+    }else{
+      setTimeout(() => {
+        checkAnswer()
+      }, 500)
     }
+   
 
   }
   return (
