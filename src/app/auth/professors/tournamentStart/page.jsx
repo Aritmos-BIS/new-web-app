@@ -140,7 +140,7 @@ const BattlePage = () => {
     const response = await apiFetch({ method: 'GET' }, '/api/battle/arimals');
     if (response?.arimalPlayer1?.arimal?.arimalId != undefined || response?.arimalPlayer2?.arima?.arimalId != undefined) {
       console.log("si entre")
-      getArimalImage(1, response?.arimalPlayer1?.arimal?.arimalId)  // corregido ararimalPlayer1 a arimalPlayer1
+      getArimalImage(1, response?.arimalPlayer1?.arimal?.arimalId) 
       getArimalImage(2, response?.arimalPlayer2?.arimal?.arimalId)
     }else{
       setTimeout(() => {
@@ -194,51 +194,53 @@ const BattlePage = () => {
   const player1 = selectedStudents[0] ? {
     firstName: group.students[selectedStudents[0].index].name,
     lastName: group.students[selectedStudents[0].index].lastname,
-    profileImage: group.students[selectedStudents[0].index].urlImage,
+    profileImage:  group.students[selectedStudents[0].index].urlImage || '/images/user-image.png',
   } : null;
 
   const player2 = selectedStudents[1] ? {
     firstName: group.students[selectedStudents[1]?.index].name,
     lastName: group.students[selectedStudents[1]?.index].lastname,
-    profileImage: group.students[selectedStudents[1]?.index].urlImage,
+    profileImage: group.students[selectedStudents[1]?.index].urlImage || '/images/user-image.png',
   } : null;
 
 
   if (phase === 'groupSelection') {
     return (
-      <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-      <Typography variant="h4" color="white" gutterBottom>Estudiantes del Grupo</Typography>
-      {group && group.students && group.students.length > 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
-          {group.students.map((student, index) => (
-            <Card key={student.id} style={{ backgroundColor: '#3C096C', margin: '10px', padding: '10px', width: '300px' }}>
-              <ListItemText primary={`${student.name} ${student.lastname}`} style={{ color: '#E0AAFF' }} />
-              <img src={student.urlImage} alt={`${student.name} ${student.lastname}`} style={{ width: '100px', height: '100px' }} />
-              <Checkbox
-                checked={selectedStudents.some(s => s.id === student.id)}
-                onChange={() => handleCheckboxChange(student, index)}
-                style={{ alignSelf: 'flex-end' }}
-                disabled={selectedStudents.length === 2 && !selectedStudents.some(s => s.id === student.id)}
-              />
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <Typography variant="body1" color="white">Cargando estudiantes...</Typography>
-      )}
-      <Button
-        onClick={handleSaveSelection}
-        disabled={selectedStudents.length !== 2}
-        style={{
-          marginTop: '20px',
-          backgroundColor: '#E0AAFF',
-          color: 'white',
-          alignSelf: 'center'
-        }}
-      >
-        Confirmar Selección
-      </Button>
-    </Container>
+      <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+        <Typography variant="h4" color="white" gutterBottom>Estudiantes del Grupo</Typography>
+        {group && group.students && group.students.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
+            {group.students.map((student, index) => (
+              <Card key={student.id} style={{ backgroundColor: '#3C096C', margin: '10px', padding: '20px', width: '200px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+                <ListItemText primary={`${student.name} ${student.lastname}`} style={{ color: '#E0AAFF', textAlign: 'center', marginBottom: '10px' }} />
+                <img src={student.urlImage || '/images/user-image.png'} alt={`${student.name} ${student.lastname}`} style={{ width: '100px', height: '100px', borderRadius: '5%', margin: '0 auto 10px auto', display: 'block' }} />                <Checkbox
+                  checked={selectedStudents.some(s => s.id === student.id)}
+                  onChange={() => handleCheckboxChange(student, index)}
+                  style={{ alignSelf: 'center', color: '#E0AAFF' }}
+                  disabled={selectedStudents.length === 2 && !selectedStudents.some(s => s.id === student.id)}
+                />
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Typography variant="body1" color="white">Cargando estudiantes...</Typography>
+        )}
+        <Button
+          onClick={handleSaveSelection}
+          disabled={selectedStudents.length !== 2}
+          style={{
+            marginTop: '20px',
+            backgroundColor: '#E0AAFF',
+            color: '#3C096C',
+            alignSelf: 'center',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+          }}
+        >
+          Confirmar Selección
+        </Button>
+      </Container>
     );
   }
 
