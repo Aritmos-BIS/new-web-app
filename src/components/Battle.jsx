@@ -6,15 +6,15 @@ import Winner from './Winner';
 const Batalla = ({player1, player2, arimal1, arimal2}) => {
   const [textInformation, setTextInformation] = useState('waiting');
   const [textGame, setTextGame] = useState('Esperando respuestas');
-  
+
   const [currentGif1, setCurrentGif1] = useState(arimal1.idleGif);
   const [arimal1Hp, setArimal1Hp] = useState(100);
-  
+
   const [currentGif2, setCurrentGif2] = useState(arimal2.idleGif);
   const [arimal2Hp, setArimal2Hp] = useState(100);
-  
+
   const [currentGif3, setCurrentGif3] = useState('');
-  
+
   const [turn, setTurn] = useState(1);
   const [turn1, setTurn1] = useState(false);
   const [turn2, setTurn2] = useState(false);
@@ -23,7 +23,6 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
 
   useEffect(() => {
     const handleCheckAnswer = async () => {
-      console.log('turnos: ', turn1, turn2);
       if (!turn1 || !turn2) {
         await checkAnswer();
       } else if (turn1 && turn2) {
@@ -38,7 +37,6 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   }, [textInformation]);
 
   useEffect(() => {
-    console.log("HP1: ", arimal1Hp, " HP2: ", arimal2Hp);
     if (arimal1Hp === 0 || arimal2Hp === 0) {
       determineWinner();
     }
@@ -67,9 +65,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   };
 
   const checkTurns = async () => {
-    console.log('chequeando');
     if (turn1 === true && turn2 === true) {
-      console.log('cambiando');
       setTurn1(false);
       setTurn2(false);
       const newTurn = turn + 1;
@@ -80,7 +76,6 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
 
   const checkAttack = async (level, player, playerId) => {
     const adjustHp = (hp) => (hp < 0 ? 0 : hp);
-    console.log("CHECK ATTACK", level, player, playerId);
     switch (level) {
       case 'hard':
         if (player == 1) {
@@ -127,15 +122,11 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   };
 
   const handleLife = async (playerId, newHp) => {
-    console.log('Updating HP for player', playerId, 'with new HP', newHp);
-    console.log({ playerId, hp: newHp });
     await apiFetch({ payload: { playerId, hp: newHp }, method: "PUT" }, '/api/battle/hp');
   };
 
   const checkAnswer = async () => {
     const answerData = await apiFetch({ method: 'GET' }, '/api/battle/answer');
-    console.log({ answerData });
-  
     if (turn === answerData?.answerPlayer1?.turn && !turn1) {
       if (answerData?.answerPlayer1?.correct) {
         await checkAttack(answerData?.answerPlayer1?.level, 1, answerData?.answerPlayer1?.playerId);
@@ -204,7 +195,20 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   }
 
   return (
-    <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+      {/* Fondo de destellos */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent)',
+        animation: 'flash 3s infinite',
+        pointerEvents: 'none',
+        zIndex: -999
+      }}></div>
+
       <Typography variant="h4" color="white" gutterBottom>¡Batalla!</Typography>
       <Card style={{ backgroundColor: '#3C096C', padding: '20px', width: '80%', display: 'flex', justifyContent: 'space-between', borderRadius: '10px', position: 'relative' }}>
         {/* Jugador 1 */}
@@ -225,7 +229,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           left: '50%',
           transform: 'translate(-50%, -50%)',
           zIndex: 1000,
-          pointerEvents: 'none', // Asegura que el GIF no interfiera con la interacción de otros elementos
+          pointerEvents: 'none', 
         }}>
          {currentGif3 ? (
           <img src={currentGif3} style={{ width: '200px', height: '200px', borderRadius: '20px', border: 'none' }} />
@@ -246,7 +250,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
         </Grid>
       </Card>
 
-      {/* Informacion */}
+      {/* Información */}
       <Grid container justifyContent="center" alignItems="center" style={{ marginTop: '20px' }}>
         <Container sx={{ backgroundColor: 'white', height: '20vh', width: '70%', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', borderRadius: '20px' }}>
           <Typography variant="h5" sx={{ color: 'black' }}>
@@ -254,8 +258,16 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           </Typography>
         </Container>
       </Grid>
+
+      <style jsx>{`
+        @keyframes flash {
+          0% { opacity: 0.2; }
+          50% { opacity: 1; }
+          100% { opacity: 0.2; }
+        }
+      `}</style>
     </Container>
   );
-}
+};
 
 export default Batalla;
