@@ -198,13 +198,8 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
           <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '30px', height: '50px', borderRadius: '20px', margin: '10px' }} />
         </Grid>
-<<<<<<< HEAD
         <LinearProgress variant="determinate" sx={{transform: 'scaleX(-1)' }} value={arimal2Hp} color={arimal1Hp <= 50 ? 'error' : 'secondary'}/>
         <Typography variant="h6" color="white" style={{ marginTop: '10px', textAlign:'end' }}>{arimal2.arimalName}</Typography>
-=======
-        <LinearProgress variant="determinate" value={arimal2Hp} color={arimal2Hp <= 50 ? 'error' : 'secondary'}/>
-        <Typography variant="h6" color="white" style={{ marginTop: '10px' }}></Typography>
->>>>>>> 63c52a2 (fix(battle): many changes)
         <img src={currentGif2} style={{ width: '200px', height: '200px', marginTop: '10px', marginInline:'auto' }} />
       </Grid>
     </Card>
