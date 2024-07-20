@@ -13,13 +13,30 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   const [currentGif2, setCurrentGif2] = useState(arimal2.idleGif);
   const [arimal2Hp, setArimal2Hp] = useState(100)
 
-  const [attack, setAttack] = useState(0)
-
   const [turn, setTurn] = useState(1)
+  const [turn1, setTurn1] = useState(false)
+  const [turn2, setTurn2] = useState(false)
+
 
   useEffect(() => {
-    checkAnswer();
-  },  [turn])
+    const handleCheckAnswer = async () => {
+      console.log('turnos: ', turn1, turn2)
+      if(!turn1 || !turn2){
+        await checkAnswer()
+      }else if(turn1 && turn2){
+        checkTurns()
+      }
+    }
+    handleCheckAnswer()
+  }, [turn, turn1, turn2])
+
+  useEffect(() => {
+    handleChangeTextInfo()
+  }, [textInformation])
+
+  useEffect(() => {
+    console.log("HP1: ", arimal1Hp, " HP2: ", arimal2Hp)
+  }, [arimal1Hp, arimal2Hp])
 
   const handleChangeTextInfo = () => {
     switch (textInformation) {
@@ -27,86 +44,140 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
         setTextGame('Esperando respuestas de jugadores');
         break;
       case 'p1Attack':
-        setTextGame(arimal1 + ' ataco a ' + arimal2);
+        setTextGame(arimal1.arimalName + ' atacó a ' + arimal2.arimalName);
         break;
       case 'p2Attack':
-        setTextGame(arimal2 + ' ataco a ' + arimal1);
+        setTextGame(arimal2.arimalName + ' atacó a ' + arimal1.arimalName);
         break;
       case 'p1Missed':
-        setTextGame(arimal1 + ' fallo el ataque a ' + arimal2);
+        setTextGame(arimal1.arimalName + ' falló el ataque a ' + arimal2.arimalName);
         break;
       case 'p2Missed':
-        setTextGame(arimal2 + ' fallo el ataque a ' + arimal1);
+        setTextGame(arimal2.arimalName + ' falló el ataque a ' + arimal1);
         break;
       default:
         break;
     }
   }
 
+  const checkTurns = async () => {
+    console.log('chequeando')
+    if (turn1 == true && turn2 == true) {
+      console.log('cambiando')
+      setTurn1(false)
+      setTurn2(false)
+      const newTurn = turn + 1
+      setTurn(newTurn)
+      await apiFetch({ payload: { turn: newTurn }, method: 'PUT' }, '/api/battle/turn')
+    }
+  }
+  const checkAttack = async (level, player, playerId) => {
+    console.log("CHECK ATTACK", level, player, playerId)
+    switch (level) {
+      case 'hard':
+        if(player == 1){
+          setTurn1(true);
+          const newHp = arimal2Hp - 30;
+          setArimal2Hp(newHp); 
+          await handleLife(playerId, newHp);
+        }else{
+          setTurn2(true);  
+          const newHp = arimal1Hp - 30;
+          setArimal1Hp(newHp); 
+          await handleLife(playerId, newHp);
+        }
+        break;
+      case 'medium':
+        if(player == 1){
+          setTurn1(true);
+          const newHp = arimal2Hp - 20;
+          setArimal2Hp(newHp); 
+          await handleLife(playerId, newHp);
+        }else{
+          setTurn2(true);
+          const newHp = arimal1Hp - 20;
+          setArimal1Hp(newHp); 
+          await handleLife(playerId, newHp);
+        }
+        break;
+      case 'easy':
+        if(player == 1){
+          setTurn1(true);
+          const newHp = arimal2Hp - 10;
+          setArimal2Hp(newHp); 
+          await handleLife(playerId, newHp);
+        }else{
+          setTurn2(true);
+          const newHp = arimal1Hp - 10;
+          setArimal1Hp(newHp); 
+          await handleLife(playerId, newHp);
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
-
+  const handleLife = async (playerId, newHp) => {
+    console.log('Updating HP for player', playerId, 'with new HP', newHp);
+    console.log({ playerId, hp: newHp })
+    await apiFetch({ payload: { playerId, hp: newHp }, method: "PUT" }, '/api/battle/hp');
+  };
+  
   const checkAnswer = async () => {
-    const answerData = apiFetch({ method: 'GET' }, '/api/battle/answer' )
-
-    if (answerData.turn == answerData?.answerPlayer1?.turn) {
-      console.log('p1')
-      if(answerData?.answerPlayer1?.level == 'hard'){
-        setAttack(30)
-      }else if(answerData?.answerPlayer1?.level == 'medium'){
-        setAttack(20)
-      }else if(answerData?.answerPlayer1?.level == 'easy'){
-        setAttack(10)
-      }
-
-      if(answerData?.answerPlayer1?.isCorrect){
-        setArimal2Hp(arimal2Hp - attack)
+    const answerData = await apiFetch({ method: 'GET' }, '/api/battle/answer');
+    console.log({ answerData });
+  
+    if (turn === answerData?.answerPlayer1?.turn && !turn1) {
+  
+      if (answerData?.answerPlayer1?.correct) {
+        await checkAttack(answerData?.answerPlayer1?.level, 1, answerData?.answerPlayer1?.playerId);
+  
         setCurrentGif1(arimal1.attackGif);
         setCurrentGif2(arimal2.damageGif);
-        await apiFetch({ payload: { _id: answerData?.answerPlayer1?.playerId, hp: arimal2Hp }, method: "PUT" }) 
+        setTextInformation('p1Attack');
+  
         setTimeout(() => {
+          setCurrentGif1(arimal1.idleGif);
+          setCurrentGif2(arimal2.idleGif);
+          setTextInformation('waiting');
         }, 5000);
       } else {
         setTextInformation('p1Missed');
         setTimeout(() => {
+          setTextInformation('waiting');
         }, 5000);
-        setCurrentGif1(arimal1.idleGif);
-        setCurrentGif2(arimal2.idleGif);
-        setTurn(turn + 1)
       }
-      
-    }else if(answerData.turn == answerData?.answerPlayer2?.turn){
-      console.log('p2')
-      if(answerData?.answerPlayer2?.level == 'hard'){
-        setAttack(30)
-      }else if(answerData?.answerPlayer1?.level == 'medium'){
-        setAttack(20)
-      }else if(answerData?.answerPlayer1?.level == 'easy'){
-        setAttack(10)
-      }
+      setTurn1(true);
+    } else if (turn === answerData?.answerPlayer2?.turn && !turn2) {
+  
+      if (answerData?.answerPlayer2?.correct) {
+        await checkAttack(answerData?.answerPlayer2?.level, 2, answerData?.answerPlayer2?.playerId);
 
-      if(answerData?.answerPlayer2?.isCorrect){
-        setArimal1Hp(arimal1Hp - attack)
         setCurrentGif2(arimal2.attackGif);
         setCurrentGif1(arimal1.damageGif);
-        await apiFetch({ payload: { _id: answerData?.answerPlayer2?.playerId, hp: arimal2Hp }, method: "PUT" }) 
+        setTextInformation('p2Attack');
+  
         setTimeout(() => {
+          setCurrentGif1(arimal1.idleGif);
+          setCurrentGif2(arimal2.idleGif);
+          setTextInformation('waiting');
         }, 5000);
       } else {
-        setTextInformation('p1Missed');
+        setTextInformation('p2Missed');
         setTimeout(() => {
+          setTextInformation('waiting');
         }, 5000);
-        setCurrentGif1(arimal1.idleGif);
-        setCurrentGif2(arimal2.idleGif);
-        setTurn(turn + 1)
       }
-    }else{
-      setTimeout(() => {
-        checkAnswer()
-      }, 500)
+      setTurn2(true);
+    } else {
+      await checkTurns();
+      setTimeout(async () => {
+        await checkAnswer()
+      }, 2000);
     }
-   
-
-  }
+  };
+  
   return (
     <Container style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
     <Typography variant="h4" color="white" gutterBottom>¡Batalla!</Typography>
@@ -127,8 +198,13 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
           <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '30px', height: '50px', borderRadius: '20px', margin: '10px' }} />
         </Grid>
+<<<<<<< HEAD
         <LinearProgress variant="determinate" sx={{transform: 'scaleX(-1)' }} value={arimal2Hp} color={arimal1Hp <= 50 ? 'error' : 'secondary'}/>
         <Typography variant="h6" color="white" style={{ marginTop: '10px', textAlign:'end' }}>{arimal2.arimalName}</Typography>
+=======
+        <LinearProgress variant="determinate" value={arimal2Hp} color={arimal2Hp <= 50 ? 'error' : 'secondary'}/>
+        <Typography variant="h6" color="white" style={{ marginTop: '10px' }}></Typography>
+>>>>>>> 63c52a2 (fix(battle): many changes)
         <img src={currentGif2} style={{ width: '200px', height: '200px', marginTop: '10px', marginInline:'auto' }} />
       </Grid>
     </Card>

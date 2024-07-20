@@ -37,18 +37,23 @@ export const PUT = async (req) => {
   const { player1, player2, ...body } = battle.toObject();
 
   const data = await req.json();
-  const { hp, _id } = data;
+  const { hp, playerId } = data;
 
   let updatedBody;
 
-  if (_id == battle.player1.playerId) {
-    const { arimal } = player1;
+  if (playerId == battle.player1.playerId) {
+
+    const { arimal, ...bodyPlayer1 } = player1;
     const newArimalHp = R.omit(['hp'], arimal)
-    updatedBody = { ...body, player1: { ...data, arimal: {...newArimalHp, hp: hp } }, player2 };
-  } else if (_id == battle.player2.playerId) {
-    const { arimal } = player1;
+    console.log({updatedBody})
+
+    updatedBody = { ...body, player1: { ...bodyPlayer1, arimal: {...newArimalHp, hp: hp } }, player2 };
+    
+  } else if (playerId == battle.player2.playerId) {
+    const { arimal, ...bodyPlayer2 } = player2;
     const newArimalHp = R.omit(['hp'], arimal)
-    updatedBody = { ...body, player1: { ...data, arimal: {...newArimalHp, hp: hp } }, player2 };
+    console.log({updatedBody})
+    updatedBody = { ...body, player2: { ...bodyPlayer2, arimal: {...newArimalHp, hp: hp } }, player1 };
   } else {
     return NextResponse.json({ error: 'Player not found' }, { status: 404 });
   }
