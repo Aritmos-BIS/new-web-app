@@ -228,10 +228,10 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           pointerEvents: 'none', // Asegura que el GIF no interfiera con la interacción de otros elementos
         }}>
          {currentGif3 ? (
-            <img src={currentGif3} style={{ width: '200px', height: '200px', borderRadius: '20px', border: 'none' }} />
-          ) : (
-            <div></div>
-          )}
+          <img src={currentGif3} style={{ width: '200px', height: '200px', borderRadius: '20px', border: 'none' }} />
+        ) : (
+          <div></div>
+        )}
         </div>
 
         {/* Jugador 2 */}
