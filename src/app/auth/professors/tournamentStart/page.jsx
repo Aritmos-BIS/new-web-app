@@ -153,12 +153,13 @@ const BattlePage = () => {
   }
 
   const handleSaveSelection = async () => {
+    console.log({selectedStudents})
     const payload = {
       _id: 1,
       turn: 0,
       player1: {
         playerId: selectedStudents[0]?.id,
-        name: selectedStudents[1]?.name, 
+        name: selectedStudents[0]?.name, 
         turn: 0,
       },
       player2: {
@@ -202,7 +203,7 @@ const BattlePage = () => {
   } : null;
 
   const player2 = selectedStudents[1] ? {
-    id: group.students[selectedStudents[0].index].id,
+    id: group.students[selectedStudents[1].index].id,
     firstName: group.students[selectedStudents[1]?.index].name,
     lastName: group.students[selectedStudents[1]?.index].lastname,
     profileImage: group.students[selectedStudents[1]?.index].urlImage || '/images/user-image.png',

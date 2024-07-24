@@ -5,11 +5,16 @@ import { Container, Typography, Box, Paper, Button, Grid } from '@mui/material';
 import Link from 'next/link';
 import { useStore } from '@/libs/store'
 import AuthWrapper from '@/components/AuthWrapper';
+import { apiFetch } from '@/libs/request';
 
 
 const ProfessorPage = () => {
 
   const { user } = useStore(state => state)
+
+  const handleDeleteBattle = async () => {
+    await apiFetch({ method: 'DELETE' }, 'http://localhost:3000/api/battle/')
+  }
 
   return(
     <Container maxWidth="100%" justifyContent="center" alignItems="center" marginInLine="auto">
@@ -41,7 +46,7 @@ const ProfessorPage = () => {
               </Button>
             </Link>
             <Link href={`/auth/professors/tournamentStart`}>
-              <Button variant="contained" color="warning" sx={{ mt: 2, width: '60%', display: 'block', margin: '20px auto' }}>
+              <Button variant="contained" color="warning" sx={{ mt: 2, width: '60%', display: 'block', margin: '20px auto' }} onClick={handleDeleteBattle()}>
                 Iniciar un torneo
               </Button>
             </Link>

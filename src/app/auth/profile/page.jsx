@@ -44,6 +44,11 @@ const ProfilePage = () => {
               <Typography variant="h3" component="h1" gutterBottom>Perfil del usuario</Typography>
               <Typography variant="h5" component="h2" gutterBottom>Nombre: <Typography variant="h6" component="p">{user?.name}</Typography></Typography>
               <Typography variant="h5" component="h2" gutterBottom>Apellidos: <Typography variant="h6" component="p">{user?.lastname}</Typography></Typography>
+              {user.userType == 'student' &&
+              (<>
+                <Typography variant="h5" component="h2" gutterBottom>Victorias: <Typography variant="h6" component="p">{user?.numberWins}</Typography></Typography>
+
+              </>)}
               <Typography variant="h5" component="h2" gutterBottom>
                 {user.userType === 'professor' ? "Nombre de su grupo:" : "Grupo al que pertenece:"} 
                 <Typography variant="h6" component="p">{user?.group?.name}</Typography>

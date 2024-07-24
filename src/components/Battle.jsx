@@ -22,12 +22,9 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   const [winner, setWinner] = useState(null);
 
   useEffect(() => {
-    const handleCheckAnswer = async () => {
-      if (!turn1 || !turn2) {
-        await checkAnswer();
-      } else if (turn1 && turn2) {
-        checkTurns();
-      }
+    const handleCheckAnswer = () => {
+      console.log('inicia en useEffect')
+      checkAnswer()
     }
     handleCheckAnswer();
   }, [turn, turn1, turn2]);
@@ -65,6 +62,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   };
 
   const checkTurns = async () => {
+    console.log('checkTurn: turno ', turn, ' turno 1 ', turn1, ' turn2 ', turn2)
     if (turn1 === true && turn2 === true) {
       setTurn1(false);
       setTurn2(false);
@@ -79,12 +77,10 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
     switch (level) {
       case 'hard':
         if (player == 1) {
-          setTurn1(true);
           const newHp = adjustHp(arimal2Hp - 30);
           setArimal2Hp(newHp); 
           await handleLife(playerId, newHp);
         } else if (player == 2) {
-          setTurn2(true);  
           const newHp = adjustHp(arimal1Hp - 30);
           setArimal1Hp(newHp); 
           await handleLife(playerId, newHp);
@@ -92,12 +88,10 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
         break;
       case 'medium':
         if (player == 1) {
-          setTurn1(true);
           const newHp = adjustHp(arimal2Hp - 20);
           setArimal2Hp(newHp); 
           await handleLife(playerId, newHp);
         } else if (player == 2) {
-          setTurn2(true);
           const newHp = adjustHp(arimal1Hp - 20);
           setArimal1Hp(newHp); 
           await handleLife(playerId, newHp);
@@ -105,12 +99,10 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
         break;
       case 'easy':
         if (player == 1) {
-          setTurn1(true);
           const newHp = adjustHp(arimal2Hp - 10);
           setArimal2Hp(newHp); 
           await handleLife(playerId, newHp);
         } else if (player == 2) {
-          setTurn2(true);
           const newHp = adjustHp(arimal1Hp - 10);
           setArimal1Hp(newHp); 
           await handleLife(playerId, newHp);
@@ -122,14 +114,20 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   };
 
   const handleLife = async (playerId, newHp) => {
-    await apiFetch({ payload: { playerId, hp: newHp }, method: "PUT" }, '/api/battle/hp');
+    console.log('player ', playerId, ' hp ', newHp)
+    const res = await apiFetch({ payload: { playerId, hp: newHp }, method: "PUT" }, '/api/battle/hp');
+    console.log({res})
   };
 
   const checkAnswer = async () => {
     const answerData = await apiFetch({ method: 'GET' }, '/api/battle/answer');
-    if (turn === answerData?.answerPlayer1?.turn && !turn1) {
+    console.log('turno ', turn, ' turno 1 ', turn1, ' turn2 ', turn2)
+    console.log({player1, player2})
+  
+    if (turn === answerData?.answerPlayer1?.turn && !turn1 && !winner) {
+      setTurn1(true);
       if (answerData?.answerPlayer1?.correct) {
-        await checkAttack(answerData?.answerPlayer1?.level, 1, answerData?.answerPlayer1?.playerId);
+        checkAttack(answerData?.answerPlayer1?.level, 1, answerData?.answerPlayer2?.playerId);
         setCurrentGif3(arimal1.attackGif);
         setCurrentGif2(arimal2.damageGif);
         setTextInformation('p1Attack');
@@ -137,17 +135,19 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           setCurrentGif3('');
           setCurrentGif2(arimal2.idleGif);
           setTextInformation('waiting');
+          console.log('inicia en p1 correct')
         }, 5000);
       } else {
         setTextInformation('p1Missed');
         setTimeout(() => {
           setTextInformation('waiting');
+          console.log('inicia en p1 incorrect')
         }, 5000);
       }
-      setTurn1(true);
-    } else if (turn === answerData?.answerPlayer2?.turn && !turn2) {
+    } else if (turn === answerData?.answerPlayer2?.turn && !turn2 && !winner) {
+      setTurn2(true);
       if (answerData?.answerPlayer2?.correct) {
-        await checkAttack(answerData?.answerPlayer2?.level, 2, answerData?.answerPlayer2?.playerId);
+        await checkAttack(answerData?.answerPlayer2?.level, 2, answerData?.answerPlayer1?.playerId);
         setCurrentGif3(arimal2.attackGif);
         setCurrentGif1(arimal1.damageGif);
         setTextInformation('p2Attack');
@@ -155,26 +155,33 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           setCurrentGif1(arimal1.idleGif);
           setCurrentGif3('');
           setTextInformation('waiting');
+          console.log('inicia en p2 correct')
         }, 5000);
       } else {
         setTextInformation('p2Missed');
         setTimeout(() => {
           setTextInformation('waiting');
+          console.log('inicia en p1 incorrect')
         }, 5000);
       }
-      setTurn2(true);
-    } else {
-      await checkTurns();
-      setTimeout(async () => {
-        await checkAnswer();
+    } else if (!winner){
+      setTimeout(() => {
+        if (!turn1 || !turn2) {
+          console.log('inicia en else')
+          checkAnswer();
+        } else if (turn1 && turn2) {
+          checkTurns();
+        }
       }, 2000);
     }
   };
 
-  const determineWinner = () => {
+  const determineWinner = async () => {
     if (arimal1Hp === 0 || arimal2Hp === 0) {
       const winnerId = arimal1Hp === 0 ? player2.id : player1.id;
-      apiFetch({ payload: { winnerId }, method: 'PUT' }, '/api/battle/winner');
+      console.log({arimal1Hp, arimal2Hp, player2, player1})
+      console.log({winnerId})
+      await apiFetch({ payload: { winnerId }, method: 'PUT' }, '/api/battle/winner');
   
       const winnerData = arimal1Hp === 0 ? {
         firstName: player2.firstName,
