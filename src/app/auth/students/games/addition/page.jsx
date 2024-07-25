@@ -62,8 +62,7 @@ const SumGame = () => {
         setPlayerLives(prevPlayerLives => {
           const newPlayerLives = prevPlayerLives - 1;
           if (newPlayerLives <= 0) {
-            setGameover(true);
-            setResultMessage('¡Perdiste!');
+            setPhase('winner');
           }
           return newPlayerLives;
         });

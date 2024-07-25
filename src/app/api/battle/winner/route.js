@@ -42,7 +42,20 @@ export const PUT = async (req) => {
       return NextResponse.json({ error: 'Battle not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ body: updatedBody }, { status: 200 });
+    const updatedStudent = await prisma.student.update({
+      where: { id: parseInt(data.winnerId) },
+      data: {
+        numberWins: {
+          increment: 1,
+        },
+      },
+    });
+
+    if (!updatedStudent) {
+      return NextResponse.json({ error: 'Winner not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ body: updatedBody, winner: updatedStudent}, { status: 200 });
 
   } catch (error) {
     console.error('Error updating battle:', error);

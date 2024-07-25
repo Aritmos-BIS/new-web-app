@@ -63,7 +63,7 @@ function LoginPage() {
   }
 
   return (
-    <Grid container sx={{ height: 'min100vh', width: 'auto', justifyContent: 'space-evenly', alignItems: 'center', m: 4 }}>
+    <Grid container sx={{ height: 'min90vh', width: 'auto', justifyContent: 'space-evenly', alignItems: 'center', m: 4 }}>
       <Grid sx={{ backgroundColor: '#7B2CBF', height: '500px', width: '500px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4 }}>
         <Box
           sx={{
