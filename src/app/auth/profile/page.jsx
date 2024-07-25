@@ -35,7 +35,7 @@ const ProfilePage = () => {
               <img 
                 src={user.urlImage ? user.urlImage : "/images/logoempresa.png"} 
                 alt="Profile Image" 
-                style={{ width: '80%', margin: 'auto' }} 
+                style={{ width: '70%', height:'40%', margin: 'auto' }} 
               />
             </Box>
           </Grid>

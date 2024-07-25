@@ -127,7 +127,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
     if (turn === answerData?.answerPlayer1?.turn && !turn1 && !winner) {
       setTurn1(true);
       if (answerData?.answerPlayer1?.correct) {
-        checkAttack(answerData?.answerPlayer1?.level, 1, answerData?.answerPlayer2?.playerId);
+        await checkAttack(answerData?.answerPlayer1?.level, 1, answerData?.answerPlayer2?.playerId);
         setCurrentGif3(arimal1.attackGif);
         setCurrentGif2(arimal2.damageGif);
         setTextInformation('p1Attack');
@@ -135,7 +135,6 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           setCurrentGif3('');
           setCurrentGif2(arimal2.idleGif);
           setTextInformation('waiting');
-          console.log('inicia en p1 correct')
         }, 5000);
       } else {
         setTextInformation('p1Missed');
