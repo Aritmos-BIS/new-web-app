@@ -3,14 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Grid from '@mui/material/Grid';
-import CardContent from '@mui/material/CardContent';
-import Box from '@mui/material/Box';
-import { LinearProgress } from '@mui/material';
 import { apiFetch } from '@/libs/request';
 import { useStore } from '@/libs/store';
 import { Container, Typography, ListItemText, Checkbox, Button, Card } from '@mui/material';
 import Battle from '@/components/Battle.jsx'
-import { styled } from '@mui/system';
 
 const BattlePage = () => {
   const router = useRouter();

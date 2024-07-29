@@ -7,16 +7,16 @@ export default function Home() {
     <main style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="flex-start" justifyContent="center" p={2} m={2} bgcolor="#5A189A" boxShadow={3} borderRadius={2}>
-            <Box flex="1" p={2}>
-              <Typography variant="h2" component="h1" gutterBottom textAlign='center' fontFamily="serif">
+          <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="flex-start" justifyContent="center" p={{md:2,sm:0}} m={2} bgcolor="#5A189A" boxShadow={3} borderRadius={2}>
+            <Box flex="1" p={2} justifyContent='center' textAlign="center" alignItems='center'>
+              <Typography variant="h2"  color='white' gutterBottom textAlign='center' fontFamily="serif">
                 Aventura Matemática: Restando con Diversión
               </Typography>
               <Box component="video" controls mx='auto' width="90%" height="auto" src="/videos/restasv.mp4" borderRadius={2} boxShadow={2} mb={2} />
               <Button href="https://www.youtube.com/watch?v=jYdqkIp90UY&ab_channel=MundoPrimaria" color="primary">Ir al video</Button>
               <Button href="https://www.youtube.com/@MundoprimariaMP" color="primary">Creado por Mundo Primaria</Button>
             </Box>
-            <Box flex="1" p={2} bgcolor="#5A189A" color="white" borderRadius={2} boxShadow={3} overflow="auto" alignItems='center' justifyContent='center' height={{ xs: 'auto', md: '680px' }}>
+            <Box flex="1" p={2} bgcolor="#5A189A" color="white" borderRadius={2} boxShadow={3} overflow="auto" alignItems='center' justifyContent='center' height={{ xs: 'auto', md: '550px' }} textAlign='center'>
               <Typography sx={{ fontSize: 'large', mt: '10px', mb: '30px' }}>
                 ¡Bienvenidos al emocionante mundo de las restas! La resta es como realizar un truco de magia matemática para descubrir cuántas cosas aún tienes después de compartir con tus amigos. Imagina que tu tesoro está lleno de lápices o dulces, y decides ser generoso compartiendo algunos. La resta entra en escena para revelar cuántos aún conservas.
               </Typography>
@@ -79,9 +79,9 @@ export default function Home() {
         </Grid>
         <Grid item xs={12}>
           <Box display="flex" justifyContent="space-evenly" m={4} flexDirection={{ xs: 'column', sm: 'row' }}>
-            <Button variant="contained" color="primary" startIcon={<ArrowBack />} href="/auth/users" sx={{ mb: { xs: 2, sm: 0 } }}>Regresar</Button> 
-            <Button variant="contained" color="primary" href="/auth/users/students/games/substraction" startIcon={<SportsEsports />} sx={{ mb: { xs: 2, sm: 0 } }}>Juego de Restas</Button>
-            <Button variant="contained" color="primary" href="/auth/users/students/quizes/substraction" startIcon={<School />}>Examen</Button>
+            <Button variant="contained" startIcon={<ArrowBack />} href="/auth/students" sx={{ backgroundColor:'#7B2CBF', mb: { xs: 2, sm: 0 } }}>Regresar</Button> 
+            <Button variant="contained" href="/auth/students/games/substraction" startIcon={<SportsEsports />} sx={{ backgroundColor:'#7B2CBF', mb: { xs: 2, sm: 0 } }}>Juego de Restas</Button>
+            <Button variant="contained" href="/auth/students/quizes/substraction" startIcon={<School />} sx={{backgroundColor:'#7B2CBF'}}>Examen</Button>
           </Box>
         </Grid>
       </Grid>

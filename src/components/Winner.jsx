@@ -1,5 +1,4 @@
 import { Container, Typography, Button } from '@mui/material';
-import { useState, useEffect } from 'react';
 import { apiFetch } from '@/libs/request';
 import { styled } from '@mui/material/styles';
 
@@ -124,7 +123,6 @@ const WinnerComponent = ({winner}) => {
     const handleClickRestart = async () => {
         try {
           await apiFetch({ method: 'DELETE' }, '/api/battle');
-          console.log('si borre');
           window.location.reload(); // Recarga la página
         } catch (error) {
           console.error('There was a problem with the delete operation:', error);

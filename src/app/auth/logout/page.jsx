@@ -34,9 +34,9 @@ function Logout() {
           component="img"
           src="/images/chihuahuasad.jpg"
           alt="Sad Chihuahua"
+          width={{xs:'100%', md: '20%', lg:'40%'}}
           sx={{
             borderRadius: '50%',
-            width: '40%',
             margin: '20px auto',
             display: 'block',
             boxShadow: 3,
