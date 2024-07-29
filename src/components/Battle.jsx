@@ -63,7 +63,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
 
   const checkTurns = async () => {
     console.log('checkTurn: turno ', turn, ' turno 1 ', turn1, ' turn2 ', turn2)
-    if (turn1 === true && turn2 === true) {
+    if (turn1 === true && turn2 === true && turn != -1) {
       setTurn1(false);
       setTurn2(false);
       const newTurn = turn + 1;
@@ -124,7 +124,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
     console.log('turno ', turn, ' turno 1 ', turn1, ' turn2 ', turn2)
     console.log({player1, player2})
   
-    if (turn === answerData?.answerPlayer1?.turn && !turn1 && !winner) {
+    if (turn === answerData?.answerPlayer1?.turn && !turn1 && winner == null) {
       setTurn1(true);
       if (answerData?.answerPlayer1?.correct) {
         await checkAttack(answerData?.answerPlayer1?.level, 1, answerData?.answerPlayer2?.playerId);
@@ -143,7 +143,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           console.log('inicia en p1 incorrect')
         }, 5000);
       }
-    } else if (turn === answerData?.answerPlayer2?.turn && !turn2 && !winner) {
+    } else if (turn === answerData?.answerPlayer2?.turn && !turn2 && winner == null) {
       setTurn2(true);
       if (answerData?.answerPlayer2?.correct) {
         await checkAttack(answerData?.answerPlayer2?.level, 2, answerData?.answerPlayer1?.playerId);
@@ -163,7 +163,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
           console.log('inicia en p1 incorrect')
         }, 5000);
       }
-    } else if (!winner){
+    } else if (turn != -1){
       setTimeout(() => {
         if (!turn1 || !turn2) {
           console.log('inicia en else')
@@ -176,8 +176,13 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
   };
 
   const determineWinner = async () => {
-    if (arimal1Hp === 0 || arimal2Hp === 0) {
+    
+    if (arimal1Hp === 0 || arimal2Hp === 0 && winner == null) {
+      console.log('Checo winner')
       const winnerId = arimal1Hp === 0 ? player2.id : player1.id;
+
+      await handleLife(arimal2Hp === 0 ? player2.id : player1.id, 0);
+
       console.log({arimal1Hp, arimal2Hp, player2, player1})
       console.log({winnerId})
       await apiFetch({ payload: { winnerId }, method: 'PUT' }, '/api/battle/winner');
@@ -193,6 +198,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
       };
   
       setWinner(winnerData);
+      setTurn(-1)
     }
   };
   

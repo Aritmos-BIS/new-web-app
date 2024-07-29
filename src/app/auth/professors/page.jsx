@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Typography, Box, Paper, Button, Grid } from '@mui/material';
 import Link from 'next/link';
 import { useStore } from '@/libs/store'
@@ -12,9 +12,15 @@ const ProfessorPage = () => {
 
   const { user } = useStore(state => state)
 
-  const handleDeleteBattle = async () => {
-    await apiFetch({ method: 'DELETE' }, 'http://localhost:3000/api/battle/')
-  }
+  useEffect(() => {
+    const handleDeleteBattle = async () => {
+      await apiFetch({ method: 'DELETE' }, 'http://localhost:3000/api/battle/')
+    }
+
+    handleDeleteBattle()
+  }, [])
+
+  
 
   return(
     <Container maxWidth="100%" justifyContent="center" alignItems="center" marginInLine="auto">
@@ -46,7 +52,7 @@ const ProfessorPage = () => {
               </Button>
             </Link>
             <Link href={`/auth/professors/tournamentStart`}>
-              <Button variant="contained" color="warning" sx={{ mt: 2, width: '60%', display: 'block', margin: '20px auto' }} onClick={handleDeleteBattle()}>
+              <Button variant="contained" color="warning" sx={{ mt: 2, width: '60%', display: 'block', margin: '20px auto' }} >
                 Iniciar un torneo
               </Button>
             </Link>
