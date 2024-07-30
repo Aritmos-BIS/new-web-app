@@ -59,9 +59,9 @@ const ProfilePage = () => {
                   <Link href={`/auth/professors/group`}>
                     <Button
                       variant="contained"
-                      sx={{ backgroundColor:'#9D4EDD', m: 2, width: '100%' }}
+                      sx={{ backgroundColor:'#9D4EDD', my: 2, width: '100%' }}
                     >
-                      Alumnos de tu grupo
+                      Alumnos del grupo
                     </Button>
                   </Link>
                 </>
