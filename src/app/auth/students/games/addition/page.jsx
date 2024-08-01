@@ -106,9 +106,6 @@ const SumGame = () => {
         Juego de las sumas
       </Typography>
       <Box display="flex" justifyContent="" alignItems="center" width="100%" paddingTop={5}>
-        <Button variant="contained" color="primary" href="/auth/users/students/courses/sumas">
-          Regresar
-        </Button>
         <Container
           maxWidth="md"
           sx={{

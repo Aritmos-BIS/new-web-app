@@ -25,7 +25,6 @@ const StudentsInfoPage = () => {
             <Card key={student.id} style={{ backgroundColor: '#3C096C', margin: '10px', padding: '10px', display: 'flex', width: '300px' }}>
               <div style={{ flex: 1, paddingRight: '10px' }}>
                 <ListItemText primary={`${student.name} ${student.lastname}`} style={{ color: '#E0AAFF' }} />
-                <Typography variant="body1" color="white">{`ID: ${student.id}`}</Typography>
                 <Typography variant="body1" color="white">{`Email: ${student.email}`}</Typography>
               </div>
               <div style={{ flex: 0 }}>

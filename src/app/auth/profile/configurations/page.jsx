@@ -132,7 +132,7 @@ function ConfigurationPage() {
               },
             }}
           >
-            Actualizar perfil
+            Guardar
           </Button>
         </Box>
       </Paper>

@@ -53,7 +53,7 @@ const ProfessorPage = () => {
             </Link>
             <Link href={`/auth/professors/tournamentStart`}>
               <Button variant="contained" color="warning" sx={{ mt: 2, width: '60%', display: 'block', margin: '20px auto' }} >
-                Iniciar un torneo
+                Iniciar batalla
               </Button>
             </Link>
           </Grid>
