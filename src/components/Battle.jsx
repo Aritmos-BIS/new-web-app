@@ -226,7 +226,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
         {/* Jugador 1 */}
         <Grid sx={{ width: '45%', display: 'flex', flexDirection: 'column' }}>
           <Grid sx={{ textAlign: 'start', display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center' }}>
-            <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '30px', height: '50px', borderRadius: '20px', margin: '10px' }} />
+            <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ width: '50px', height: '50px', borderRadius: '20px', margin: '10px', objectFit: 'cover' }} />
             <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
           </Grid>
           <LinearProgress variant="determinate" value={arimal1Hp} color={arimal1Hp <= 50 ? 'error' : 'secondary'} />
@@ -254,7 +254,7 @@ const Batalla = ({player1, player2, arimal1, arimal2}) => {
         <Grid sx={{ width: '45%', display: 'flex', flexDirection: 'column' }}>
           <Grid sx={{ width: '100%', textAlign: 'end', display: 'flex', flexDirection: 'row', justifyContent: 'end', alignItems: 'center' }}>
             <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
-            <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '30px', height: '50px', borderRadius: '20px', margin: '10px' }} />
+            <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ width: '50px', height: '50px', borderRadius: '20px', margin: '10px', objectFit: 'cover' }} />
           </Grid>
           <LinearProgress variant="determinate" sx={{ transform: 'scaleX(-1)' }} value={arimal2Hp} color={arimal2Hp <= 50 ? 'error' : 'secondary'} />
           <Typography variant="h6" color="white" style={{ marginTop: '10px', textAlign: 'end' }}>{arimal2.arimalName}</Typography>

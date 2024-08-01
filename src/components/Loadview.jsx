@@ -9,7 +9,7 @@ function Loadview() {
           <img src="/images/logo-xl.png" alt="Logo" style={{ width: '100%', height: 'auto' }} />
         </div>
         <CircularProgress color="secondary" size={80} thickness={4} />
-        <Typography variant="h1" style={{ fontSize: '5rem', marginBottom: '1rem' }}>
+        <Typography variant="h3" style={{ fontSize: '2rem', marginBottom: '1rem' }}>
           Cargando...
         </Typography>
       </Container>
