@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Grid, Box, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Loadview from "@/components/Loadview";
 import { apiFetch } from "@/libs/request";
 
@@ -13,6 +13,27 @@ function RegisterPage() {
   const router = useRouter();
   const isProfessor = watch("isprofessor");
   const [loading, setLoading] = useState(false);
+
+  const images = [
+    '/images/ajoloteMimido.png',
+    '/images/cactiPeleador.jpg',
+    '/images/monarchMariposa.jpg'
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(true);
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setFade(false);
+      }, 500); 
+    }, 3000); 
+
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   const imageStyle = {
     borderRadius: '15px',
@@ -69,12 +90,12 @@ function RegisterPage() {
   }
 
   return (
-    <Grid container sx={{ height: '90vh', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-      <Grid item sx={{ backgroundColor: '#7B2CBF', height: 'auto', width: '600px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4, m: 4 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+    <Grid  container sx={{ height: {md:'90vh', xs:'100%'}, width: 'auto', justifyContent: 'center', alignItems: 'center', flexDirection: { xs: 'row', md: 'row' } }}>
+      <Grid  item sx={{ backgroundColor: '#7B2CBF', height: { xs: 'auto', md: 'auto' }, width: { xs: '90%', md: '500px' }, borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4, m: { xs: 4, md: 4 } }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+          <Typography variant="h4" sx={{ color: 'white' }}>Registro</Typography>
+          {errors.server && <Typography color="error" sx={{ mb: 2 }}>{errors.server.message}</Typography>}
           <Box component="form" noValidate onSubmit={onSubmit} sx={{ width: '100%' }}>
-            <Typography variant="h4" sx={{ color: 'white' }}>Registro</Typography>
-            {errors.server && <Typography color="error" sx={{ mb: 2 }}>{errors.server.message}</Typography>}
             <TextField
               sx={{ boxShadow: 'inset 5px 5px 5px 5px #E0E0E0', backgroundColor: 'white', borderRadius: '10px', mb: -3 }}
               variant="filled"
@@ -188,15 +209,26 @@ function RegisterPage() {
               Ingresar
             </Button>
           </Box>
+          <Typography sx={{ mt: 2, color: 'white' }}>
+            ¿Ya tienes una cuenta?{' '}
+            <Link href="/auth/login" style={{ color: '#F2E7FE' }}>
+              Inicia sesión
+            </Link>
+          </Typography>
         </Box>
       </Grid>
-      <Image
-        src="/images/ajoloteMimido.png"
-        width={550}
-        height={550}
-        style={imageStyle}
-        alt="Axolotl mimido"
-      />
+      <Box sx={{ position: 'relative', width: { xs: '90%', md: '550px' }, height: { xs: '300px', md: '550px' }, order: { xs: 1, md: 2 }, marginY:2 }}>
+        {images.map((image, index) => (
+          <Image
+            key={index}
+            src={image}
+            layout="fill"
+            objectFit="cover"
+            style={{ ...imageStyle, opacity: index === currentImageIndex ? 1 : 0, transition: 'opacity 0.5s' }}
+            alt={`Image ${index + 1}`}
+          />
+        ))}
+      </Box>
     </Grid>
   );
 }

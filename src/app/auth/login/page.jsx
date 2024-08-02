@@ -58,13 +58,34 @@ function LoginPage() {
     }
   }, [fetched, router, user.userType]);
 
+  const images = [
+    '/images/ajoloteMimido.png',
+    '/images/cactiPeleador.jpg',
+    '/images/monarchMariposa.jpg'
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(true);
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setFade(false);
+      }, 500); 
+    }, 3000); 
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   if (loading) {
     return <Loadview />;
   }
 
   return (
-    <Grid container sx={{ height: 'min90vh', width: 'auto', justifyContent: 'space-evenly', alignItems: 'center', m: 4 }}>
-      <Grid sx={{ backgroundColor: '#7B2CBF', height: '500px', width: '500px', borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4 }}>
+    <Grid container sx={{ height: {md:'90vh', xs:'100%'}, width: 'auto', justifyContent: 'center', alignItems: 'center', flexDirection: { xs: 'row', md: 'row' } }}>
+      <Grid item sx={{ backgroundColor: '#7B2CBF', height: { xs: 'auto', md: '500px' }, width: { xs: '90%', md: '500px' }, borderRadius: '15px', boxShadow: '5px 5px 5px 5px #000000', p: 4, m: { xs: 4, md: 4 } }}>
         <Box
           sx={{
             display: 'flex',
@@ -78,13 +99,13 @@ function LoginPage() {
           <Typography variant="h3" sx={{ color: 'white' }}>
             Iniciar sesión
           </Typography>
-          <Grid sx={{ flex: '1', flexDirection: 'column' }}>
+          <Grid sx={{ flex: '1', flexDirection: 'column', color: 'white' }}>
             <Typography>¿Aún no tienes cuenta?</Typography>
             <Link href="/auth/register">
               <Typography sx={{ textDecoration: 'underline', cursor: 'pointer', color: '#E0AAFF' }}>Regístrate ahora</Typography>
             </Link>
           </Grid>
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
+          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: '100%' }}>
             <Box sx={{ width: '100%' }}>
               <TextField
                 sx={{
@@ -114,12 +135,13 @@ function LoginPage() {
                 {errors.email ? errors.email.message : ' '}
               </Typography>
             </Box>
-            <Box sx={{ width: '400px' }} >
+            <Box sx={{ width: '100%' }} >
               <TextField
                 sx={{
                   boxShadow: 'inset 5px 5px 5px 5px #E0E0E0',
                   backgroundColor: 'white',
                   borderRadius: '10px',
+                  mt:-1
                 }}
                 variant="filled"
                 color="secondary"
@@ -144,6 +166,7 @@ function LoginPage() {
             </Box>
             <Button
               type="submit"
+              fullWidth
               sx={{ backgroundColor: '#C77DFF', color: 'white' }}
             >
               Ingresar
@@ -152,13 +175,18 @@ function LoginPage() {
           </Box>
         </Box>
       </Grid>
-      <Image
-        src= "/images/ajoloteMimido.png"
-        width={550}
-        height={550} 
-        style={imageStyle}
-        alt='Axolotl mimido'
-      />
+      <Box sx={{ position: 'relative', width: { xs: '90%', md: '550px' }, height: { xs: '300px', md: '550px' }, order: { xs: 1, md: 2 } }}>
+        {images.map((image, index) => (
+          <Image
+            key={index}
+            src={image}
+            layout="fill"
+            objectFit="cover"
+            style={{ ...imageStyle, opacity: index === currentImageIndex ? 1 : 0, transition: 'opacity 0.5s' }}
+            alt={`Image ${index + 1}`}
+          />
+        ))}
+      </Box>
     </Grid>
   );
 }

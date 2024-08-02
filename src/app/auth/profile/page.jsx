@@ -28,19 +28,19 @@ const ProfilePage = () => {
 
   return (
     <Container sx={{ py: 5, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-      <Paper sx={{ bgcolor: 'purple', color: 'white', textAlign: 'center', p: 4, borderRadius: 2 }}>
+      <Paper sx={{ bgcolor: '#5A189A', color: 'white', textAlign: 'center', p: { xs: 2, sm: 4 }, borderRadius: 2, width: '100%', maxWidth: 800 }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <img 
                 src={user.urlImage ? user.urlImage : "/images/logoempresa.png"} 
                 alt="Profile Image" 
-                style={{ width: '70%', height:'40%', margin: 'auto' }} 
+                style={{ width: {md:'100%', xs:'40%'}, height: {md:'100%', xs:'60%'}, maxWidth: 300, height: 'auto', borderRadius: '5%' }} 
               />
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Paper sx={{ bgcolor: 'white', color: 'black', p: 4, borderRadius: 2 }}>
+            <Paper sx={{ bgcolor: 'white', color: 'black', p: { xs: 2, sm: 4 }, borderRadius: 2 }}>
               <Typography variant="h3" component="h1" gutterBottom>Perfil del usuario</Typography>
               <Typography variant="h5" component="h2" gutterBottom>Nombre: <Typography variant="h6" component="p">{user?.name}</Typography></Typography>
               <Typography variant="h5" component="h2" gutterBottom>Apellidos: <Typography variant="h6" component="p">{user?.lastname}</Typography></Typography>
@@ -59,10 +59,9 @@ const ProfilePage = () => {
                   <Link href={`/auth/professors/group`}>
                     <Button
                       variant="contained"
-                      color="primary"
-                      sx={{m:2 , width: '70%' }}
+                      sx={{ backgroundColor:'#9D4EDD', my: 2, width: '100%' }}
                     >
-                      Alumnos de tu grupo
+                      Alumnos del grupo
                     </Button>
                   </Link>
                 </>
@@ -70,8 +69,7 @@ const ProfilePage = () => {
               <Link href={'/auth/profile/configurations'}>
                 <Button
                   variant="contained"
-                  color="secondary"
-                  sx={{ width: '70%' }}
+                  sx={{backgroundColor:'#7B2CBF', width: '100%' }}
                 >
                   Edita tu perfil
                 </Button>

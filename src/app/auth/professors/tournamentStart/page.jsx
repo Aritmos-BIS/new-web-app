@@ -3,14 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Grid from '@mui/material/Grid';
-import CardContent from '@mui/material/CardContent';
-import Box from '@mui/material/Box';
-import { LinearProgress } from '@mui/material';
 import { apiFetch } from '@/libs/request';
 import { useStore } from '@/libs/store';
 import { Container, Typography, ListItemText, Checkbox, Button, Card } from '@mui/material';
 import Battle from '@/components/Battle.jsx'
-import { styled } from '@mui/system';
 
 const BattlePage = () => {
   const router = useRouter();
@@ -219,7 +215,7 @@ const BattlePage = () => {
             {group.students.map((student, index) => (
               <Card key={student.id} style={{ backgroundColor: '#3C096C', margin: '10px', padding: '20px', width: '200px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
                 <ListItemText primary={`${student.name} ${student.lastname}`} style={{ color: '#E0AAFF', textAlign: 'center', marginBottom: '10px' }} />
-                <img src={student.urlImage || '/images/user-image.png'} alt={`${student.name} ${student.lastname}`} style={{ width: '100px', height: '100px', borderRadius: '5%', margin: '0 auto 10px auto', display: 'block' }} />
+                <img src={student.urlImage || '/images/user-image.png'} alt={`${student.name} ${student.lastname}`} style={{ width: '100px', height: '100px', borderRadius: '5%', margin: '0 auto 10px auto', display: 'block', objectFit: 'cover' }} />
                 <Checkbox
                   checked={selectedStudents.some(s => s.id === student.id)}
                   onChange={() => handleCheckboxChange(student, index)}
@@ -260,7 +256,7 @@ const BattlePage = () => {
             {player1 && (
               <Card style={{ backgroundColor: '#3C096C', display:'flex', flexDirection:'column', textAlign:'center', padding: '35px', width: 'auto' }}>
                 <Typography variant="h6" color="white">{`${player1.firstName} ${player1.lastName}`}</Typography>
-                <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ margin: '10px', width: '150px', height: '150px', borderRadius: '100%' }} />
+                <img src={player1.profileImage} alt={`${player1.firstName} ${player1.lastName}`} style={{ margin: '10px', width: '150px', height: '150px', borderRadius: '100%', objectFit: 'cover' }} />
                 {arimal1?.idleGif !== undefined ? (
                   <>
                     <Typography variant="h6" color="white" textAlign='center'>{arimal1.arimalName}</Typography>
@@ -284,7 +280,7 @@ const BattlePage = () => {
             {player2 && (
               <Card style={{ backgroundColor: '#3C096C', display:'flex', flexDirection:'column', textAlign:'center', padding: '35px', width: 'auto'}}>
                 <Typography variant="h6" color="white">{`${player2.firstName} ${player2.lastName}`}</Typography>
-                <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ margin: '10px', width: '150px', height: '150px', borderRadius: '100%'}} />
+                <img src={player2.profileImage} alt={`${player2.firstName} ${player2.lastName}`} style={{ margin: '10px', width: '150px', height: '150px', borderRadius: '100%', objectFit: 'cover'}} />
                 {arimal2?.idleGif !== undefined ? (
                   <>
                     <Typography variant="h6" color="white" textAlign='center'>{arimal2.arimalName}</Typography>

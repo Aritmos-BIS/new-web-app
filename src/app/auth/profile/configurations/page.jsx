@@ -49,11 +49,7 @@ function ConfigurationPage() {
   };
 
   const handleCancel = () => {
-    if (userType === 'professor') {
-      router.push(`/auth/professors`);
-    } else {
-      router.push(`/auth/students`);
-    }
+      router.push(`/auth/profile`);
   };
 
   return (
@@ -62,7 +58,7 @@ function ConfigurationPage() {
         component="form"
         onSubmit={handleUpdateProfile}
         sx={{
-          backgroundColor: 'purple',
+          backgroundColor: '#5A189A',
           boxShadow: 3,
           margin: 3,
           padding: 4,
@@ -109,7 +105,7 @@ function ConfigurationPage() {
           value={lastname}
           onChange={(e) => setLastname(e.target.value)}
         />
-        <Box display="flex" justifyContent="space-between" mt={2}>
+        <Box display="flex" justifyContent="space-between" mt={2} gap={2}>
           <Button
             onClick={handleCancel}
             variant="contained"
@@ -128,15 +124,15 @@ function ConfigurationPage() {
             type="submit"
             variant="contained"
             sx={{
-              backgroundColor: 'skyblue',
+              backgroundColor: '#7B2CBF',
               color: 'white',
               ':hover': {
-                backgroundColor: 'blue',
+                backgroundColor: '#9D4EDD',
                 color: 'black',
               },
             }}
           >
-            Actualizar perfil
+            Guardar
           </Button>
         </Box>
       </Paper>
